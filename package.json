@@ -1,0 +1,27 @@
+{
+  "name": "es6-macros",
+  "description": "macros",
+  "version": "0.0.1",
+  "author": "James Long <longster@gmail.com>",
+  "engines": {
+    "node": "*"
+  },
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jlongster/es6-macros.git"
+  },
+  "license": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/jlongster/es6-macros/blob/master/LICENSE"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/jlongster/es6-macros/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
