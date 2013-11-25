@@ -21,7 +21,6 @@ macro destruct_objassign {
         destruct_next $declare ($obj.$name) $name
     }
 }
-export destruct_objassign
 
 macro destruct_arrassign {
     rule { $declare ($pattern:expr = $default:expr) $obj:expr } => {
@@ -32,7 +31,6 @@ macro destruct_arrassign {
         destruct_next $declare ($obj) $pattern
     }    
 }
-export destruct_arrassign
 
 macro destruct_finish {
     rule { $declare { $pattern ... } $obj:expr } => {
@@ -51,7 +49,6 @@ macro destruct_finish {
         $declare $id = $val;
     }
 }
-export destruct_finish
 
 macro destruct_next {
     // wrap all fields in parentheses
@@ -98,7 +95,6 @@ macro destruct_next {
         destruct_finish $declare $var $obj
     }
 }
-export destruct_next
 
 let var = macro {
     rule { $var:expr = $obj:expr } => {
