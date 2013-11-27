@@ -97,7 +97,8 @@ macro destruct_next {
 }
 
 let var = macro {
-    rule { $var:expr = $obj:expr } => {
+    // todo: handle multiple cases
+    rule { $var:expr = $obj:expr ; } => {
         destruct_next var ($obj) $var
     }
 }
