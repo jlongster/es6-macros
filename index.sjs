@@ -1,108 +1,135 @@
 
+macro _debug {
+    case { $expr ... } => {
+        function collapse(stx) {
+            return stx.map(function(s) {
+                if(s.token.inner) {
+                    return s.token.value[0] +
+                        collapse(s.token.inner) +
+                        s.token.value[1];
+                }
+
+                return s.token.value;
+            }).join(' ');
+        }
+
+        var stx = #{ $expr ... };
+        var val = makeValue(collapse(stx), #{ctx});
+
+        return withSyntax($val = [val]) {
+            return #{$val}
+        }
+    }
+}
+
 // TODO:
 // elision: var [,,,four] = arr;
 // rest: var [foo, bar, ...rst] = arr;
 // function args: function(foo, bar, { baz, poop }) {}
 
 macro destruct_objassign {
-    rule { $declare ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
-        destruct_next $declare ($obj.$prop || $default) $pattern
+    rule { ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
+        destruct_next ($obj.$prop || $default) $pattern
     }
 
-    rule { $declare ($id:ident = $default:expr) $obj:expr } => {
-        destruct_next $declare ($obj.$id || $default) $id
+    rule { ($id:ident = $default:expr) $obj:expr } => {
+        destruct_next ($obj.$id || $default) $id
     }
 
-    rule { $declare ($prop:ident : $pattern:expr) $obj:expr } => {
-        destruct_next $declare ($obj.$prop) $pattern
+    rule { ($prop:ident : $pattern:expr) $obj:expr } => {
+        destruct_next ($obj.$prop) $pattern
     }
 
-    rule { $declare ($name:ident) $obj:expr } => {
-        destruct_next $declare ($obj.$name) $name
+    rule { ($name:ident) $obj:expr } => {
+        destruct_next ($obj.$name) $name
+    }
+
+    rule { () $obj:expr } => {
+        _noop
     }
 }
-export destruct_objassign
 
 macro destruct_arrassign {
-    rule { $declare ($pattern:expr = $default:expr) $obj:expr } => {
-        destruct_next $declare ($obj || $default) $pattern
+    rule { ($pattern:expr = $default:expr) $obj:expr } => {
+        destruct_next ($obj || $default) $pattern
     }    
 
-    rule { $declare ($pattern:expr) $obj:expr } => {
-        destruct_next $declare ($obj) $pattern
+    rule { ($pattern:expr) $obj:expr } => {
+        destruct_next ($obj) $pattern
     }    
+
+    rule { () $obj:expr } => {
+        _noop
+    }
 }
-export destruct_arrassign
 
 macro destruct_finish {
-    rule { $declare { $pattern ... } $obj:expr } => {
-        var obj = $obj;
-        $(destruct_objassign $declare $pattern obj) ...
+    rule { { $pattern (,) ... } $obj:expr } => {
+        obj = $obj, $(destruct_objassign $pattern obj) (,) ...
     }
 
-    rule { $declare [ $pattern ... ] $arr:expr } => {
-        var arr = $arr;
-        var i = 0;
-        
-        $(destruct_arrassign $declare $pattern arr[i++]) ...
+    rule { [ $pattern (,) ... ] $arr:expr } => {
+        arr = $arr, i=0, $(destruct_arrassign $pattern arr[i++]) (,) ...
     }
 
-    rule { $declare $id $val:expr } => {
-        $declare $id = $val;
+    rule { $id $val:expr } => {
+        $id = $val
     }
 }
-export destruct_finish
 
 macro destruct_next {
     // wrap all fields in parentheses
 
-    rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr = $val:expr } => {
-        destruct_next $a $b $c ($acc ... ($prop: $pattern = $val))
+    rule { $a $b ($acc ...), $prop:ident : $pattern:expr = $val:expr } => {
+        destruct_next $a $b ($acc ... , ($prop: $pattern = $val))
     }
 
-    rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr } => {
-        destruct_next $a $b $c ($acc ... ($prop: $pattern))
+    rule { $a $b ($acc ...), $prop:ident : $pattern:expr } => {
+        destruct_next $a $b ($acc ... , ($prop: $pattern))
     }
 
-    rule { $a $b $c ($acc ...), $name:ident = $val:expr } => {
-        destruct_next $a $b $c ($acc ... ($name = $val))
+    rule { $a $b ($acc ...), $name:ident = $val:expr } => {
+        destruct_next $a $b ($acc ... , ($name = $val))
     }
 
-    rule { $a $b $c ($acc ...), $pattern:expr } => {
-        destruct_next $a $b $c ($acc ... ($pattern))
+    rule { $a $b ($acc ...), $pattern:expr } => {
+        destruct_next $a $b ($acc ... , ($pattern))
     }
 
     // pass along normalized object
 
-    rule { $declare ($obj:expr) {} ($acc ...) } => {
-        destruct_finish $declare { $acc ... } $obj
-    }
+    rule { ($obj:expr) {} ($acc ...) } => {
+        destruct_finish { $acc ... } $obj
+    } 
 
-    rule { $declare ($obj:expr) [] ($acc ...) } => {
-        destruct_finish $declare [ $acc ... ] $obj
+    rule { ($obj:expr) [] ($acc ...) } => {
+        destruct_finish [ $acc ... ] $obj
     }
 
     // strip out fields
 
-    rule { $declare $o { $field ... } } => {
-        destruct_next $declare $o {} (), $field ...
+    rule { $o { $field ... } } => {
+        destruct_next $o {} (()), $field ...
     }
 
-    rule { $declare $o [ $field ... ] } => {
-        destruct_next $declare $o [] (), $field ...
+    rule { $o [ $field ... ] } => {
+        destruct_next $o [] (()), $field ...
     }
 
     // pass normal expr along
 
-    rule { $declare ($obj:expr) $var:expr } => {
-        destruct_finish $declare $var $obj
+    rule { ($obj:expr) $var:expr } => {
+        destruct_finish $var $obj
     }
 }
-export destruct_next
 
 let var = macro {
     rule { $var:expr = $obj:expr } => {
-        destruct_next var ($obj) $var
+        var destruct_next ($obj) $var
+    }
+
+    rule { $id } => {
+        var $id
     }
 }
 export var
@@ -113,17 +140,27 @@ let let = macro {
     }
 
     rule { $var:expr = $obj:expr } => {
-        destruct_next let ($obj) $var
+        let destruct_next ($obj) $var
+    }
+
+    rule { $id } => {
+        let $id
     }
 }
 export let
 
-let const = macro {
-    rule { $var:expr = $obj:expr } => {
-        destruct_next const ($obj) $var
-    }
-}
-export const
+// sweet.js doesn't support const yet; it needs to update esprima
+
+// let const = macro {
+//     rule { $var:expr = $obj:expr } => {
+//         const destruct_next ($obj) $var
+//     }
+
+//     rule { $id } => {
+//         const $id
+//     }
+// }
+// export const
 
 
 // TODO: ES6 classes

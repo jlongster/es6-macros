@@ -4,6 +4,13 @@ var expect = require('expect.js');
 macro testWithDecl {
     rule { $var $name } => {
         describe($name + ' keyword', function() {
+            it('should handle normal declarations', function() {
+                $var x;
+                $var y = 5;
+                $var w = function(){};
+                $var z = x;
+            });
+
             it('should basically work', function() {
                 // basic destructuring
                 $var {one, two} = { one: 1, two: 2 };
@@ -61,5 +68,5 @@ macro testWithDecl {
 }
 
 testWithDecl var "var"
-testWithDecl let "let"
-testWithDecl const "const"
+//testWithDecl let "let"
+//testWithDecl const "const"
