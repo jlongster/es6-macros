@@ -25,7 +25,6 @@ macro _debug {
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
 // TODO:
-// elision: var [,,,four] = arr;
 // rest: var [foo, bar, ...rst] = arr;
 // function args: function(foo, bar, { baz, poop }) {}
 
@@ -34,8 +33,8 @@ macro destruct_objassign {
         destruct_next ($obj.$prop || $default) $pattern
     }
 
-    rule { ($id:ident = $default:expr) $obj:expr } => {
-        destruct_next ($obj.$id || $default) $id
+    rule { ($name:ident = $default:expr) $obj:expr } => {
+        destruct_next ($obj.$name || $default) $name
     }
 
     rule { ($prop:ident : $pattern:expr) $obj:expr } => {
@@ -52,15 +51,19 @@ macro destruct_objassign {
 }
 
 macro destruct_arrassign {
-    rule { ($pattern:expr = $default:expr) $obj:expr } => {
-        destruct_next ($obj || $default) $pattern
-    }    
+    rule { ($pattern:expr = $default:expr) $arr $index } => {
+        destruct_next ($arr[$index++] || $default) $pattern
+    }
 
-    rule { ($pattern:expr) $obj:expr } => {
-        destruct_next ($obj) $pattern
-    }    
+    rule { (.. $name:ident) $arr $index } => {
+        destruct_next ($arr.slice($index)) $name
+    }
 
-    rule { () $obj:expr } => {
+    rule { ($pattern:expr) $arr $index } => {
+        destruct_next ($arr[$index++]) $pattern
+    }
+
+    rule { () $arr $index } => {
         _noop
     }
 }
@@ -71,7 +74,7 @@ macro destruct_finish {
     }
 
     rule { [ $pattern (,) ... ] $arr:expr } => {
-        arr = $arr, i=0, $(destruct_arrassign $pattern arr[i++]) (,) ...
+        arr = $arr, i=0, $(destruct_arrassign $pattern arr i) (,) ...
     }
 
     rule { $id $val:expr } => {
@@ -98,6 +101,10 @@ macro destruct_next {
         destruct_next $a $b ($acc ... , ($pattern))
     }
 
+    rule { $a $b ($acc ...), .. $name:ident} => {
+        destruct_next $a $b ($acc ... , (.. $name))
+    }
+
     rule { $a $b ($acc ...), } => {
         destruct_next $a $b ($acc ... , (_noop))
     }
@@ -106,7 +113,7 @@ macro destruct_next {
 
     rule { ($obj:expr) {} ($acc ...) } => {
         destruct_finish { $acc ... } $obj
-    } 
+    }
 
     rule { ($obj:expr) [] ($acc ...) } => {
         destruct_finish [ $acc ... ] $obj
@@ -143,7 +150,7 @@ export var
 // sweet.js doesn't support let and const yet, but it should come very soon.
 
 // let let = macro {
-//     rule { $id = macro { $body ... } } => { 
+//     rule { $id = macro { $body ... } } => {
 //         let $id = macro { $body ... }
 //     }
 
@@ -167,3 +174,6 @@ export var
 //     }
 // }
 // export const
+
+//var [,,,four] = arr;
+var [one, two, ..rest] = [1, 2, 3, 4, 5];

@@ -84,7 +84,18 @@ macro testWithDecl {
                 $var [,,three,,,six] = [1, 2, 3, 4, 5, 6];
                 expect(three).to.be(3);
                 expect(six).to.be(6);
+            });
 
+            it('should handle rest', function() {
+                $var [one, two, ..rest] = [1, 2, 3, 4];
+                expect(rest.length).to.be(2);
+                expect(rest[0]).to.be(3);
+                expect(rest[1]).to.be(4);
+
+                $var [,, ..rest2] = [1, 2, 3, 4];
+                expect(rest2.length).to.be(2);
+                expect(rest2[0]).to.be(3);
+                expect(rest2[1]).to.be(4);
             });
         });
     }
