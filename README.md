@@ -13,7 +13,6 @@ TODO:
 
 * finish destructuring
 * classes
-* arrow function syntax
 * rest and default arguments
 * spread operator for applying arguments
 * possibly limited `for of` support
