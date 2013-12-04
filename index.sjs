@@ -134,22 +134,22 @@ let var = macro {
 }
 export var
 
-let let = macro {
-    rule { $id = macro { $body ... } } => { 
-        let $id = macro { $body ... }
-    }
+// sweet.js doesn't support let and const yet, but it should come very soon.
 
-    rule { $var:expr = $obj:expr } => {
-        let destruct_next ($obj) $var
-    }
+// let let = macro {
+//     rule { $id = macro { $body ... } } => { 
+//         let $id = macro { $body ... }
+//     }
 
-    rule { $id } => {
-        let $id
-    }
-}
-export let
+//     rule { $var:expr = $obj:expr } => {
+//         let destruct_next ($obj) $var
+//     }
 
-// sweet.js doesn't support const yet; it needs to update esprima
+//     rule { $id } => {
+//         let $id
+//     }
+// }
+// export let
 
 // let const = macro {
 //     rule { $var:expr = $obj:expr } => {

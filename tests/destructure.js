@@ -1,54 +1,68 @@
 'use strict';
-var expect$343 = require('expect.js');
+var expect$287 = require('expect.js');
 describe('var' + ' keyword', function () {
     it('should handle normal declarations', function () {
-        var x$378;
-        var y$382 = 5;
-        var w$386 = function () {
+        var x$321;
+        var y$325 = 5;
+        var w$329 = function () {
         };
-        var z$390 = x$378;
+        var z$333 = x$321;
+        var result$335;
+        for (var i$342 = 0; i$342 < 5; i$342++) {
+            result$335 = i$342;
+        }
+        expect$287(i$342).to.be(5);
     });
     it('should basically work', function () {
-        var obj$404 = {
+        var obj$356 = {
                 one: 1,
                 two: 2
-            }, _noop$405, one$406 = obj$404.one, two$407 = obj$404.two;
-        expect$343(one$406).to.be(1);
-        expect$343(two$407).to.be(2);
-        var arr$421 = [
+            }, _noop$357, one$358 = obj$356.one, two$359 = obj$356.two;
+        expect$287(one$358).to.be(1);
+        expect$287(two$359).to.be(2);
+        var arr$373 = [
                 1,
                 2
-            ], i$422 = 0, _noop$423, foo$424 = arr$421[i$422++], bar$425 = arr$421[i$422++];
-        expect$343(foo$424).to.be(1);
-        expect$343(bar$425).to.be(2);
+            ], i$374 = 0, _noop$375, foo$376 = arr$373[i$374++], bar$377 = arr$373[i$374++];
+        expect$287(foo$376).to.be(1);
+        expect$287(bar$377).to.be(2);
+        var result$379;
+        var arr$383 = [
+                1,
+                2
+            ];
+        for (var arr = arr$383, i = 0, _noop, x$413 = arr[i++], y$414 = arr[i++]; x$413 < 10; x$413++) {
+            result$379 = y$414 * 2;
+        }
+        expect$287(result$379).to.be(4);
     });
     it('should rename', function () {
-        var obj$435 = {
+        var obj$424 = {
                 one: 1,
                 two: 2
-            }, _noop$436, val1$437 = obj$435.one;
-        expect$343(val1$437).to.be(1);
+            }, _noop$425, val1$426 = obj$424.one;
+        expect$287(val1$426).to.be(1);
     });
     it('should set default values', function () {
-        var obj$451 = { two: 2 }, _noop$452, one$453 = obj$451.one || 1, two$454 = obj$451.two;
-        expect$343(one$453).to.be(1);
-        expect$343(two$454).to.be(2);
-        var arr$468 = [1], i$469 = 0, _noop$470, foo$471 = arr$468[i$469++], bar$472 = arr$468[i$469++] || 2;
-        expect$343(foo$471).to.be(1);
-        expect$343(bar$472).to.be(2);
+        var obj$440 = { two: 2 }, _noop$441, one$442 = obj$440.one || 1, two$443 = obj$440.two;
+        expect$287(one$442).to.be(1);
+        expect$287(two$443).to.be(2);
+        var arr$457 = [1], i$458 = 0, _noop$459, foo$460 = arr$457[i$458++], bar$461 = arr$457[i$458++] || 2;
+        expect$287(foo$460).to.be(1);
+        expect$287(bar$461).to.be(2);
     });
     it('should handle multiple levels', function () {
-        var arr$496 = [
+        var arr$485 = [
                 1,
                 {
                     bar: 2,
                     baz: 3
                 }
-            ], i$497 = 0, _noop$498, foo$499 = arr$496[i$497++], obj$500 = arr$496[i$497++], _noop$501, bar$502 = obj$500.bar, baz$503 = obj$500.baz;
-        expect$343(foo$499).to.be(1);
-        expect$343(bar$502).to.be(2);
-        expect$343(baz$503).to.be(3);
-        var arr$537 = [
+            ], i$486 = 0, _noop$487, foo$488 = arr$485[i$486++], obj$489 = arr$485[i$486++], _noop$490, bar$491 = obj$489.bar, baz$492 = obj$489.baz;
+        expect$287(foo$488).to.be(1);
+        expect$287(bar$491).to.be(2);
+        expect$287(baz$492).to.be(3);
+        var arr$526 = [
                 1,
                 {
                     two: 2,
@@ -57,115 +71,31 @@ describe('var' + ' keyword', function () {
                         4
                     ]
                 }
-            ], i$538 = 0, _noop$539, one$540 = arr$537[i$538++], obj$541 = arr$537[i$538++], _noop$542, two$543 = obj$541.two, arr$544 = obj$541.nums, i$545 = 0, _noop$546, three$547 = arr$544[i$545++], four$548 = arr$544[i$545++];
-        expect$343(one$540).to.be(1);
-        expect$343(two$543).to.be(2);
-        expect$343(three$547).to.be(3);
-        expect$343(four$548).to.be(4);
-        var obj$572 = {
+            ], i$527 = 0, _noop$528, one$529 = arr$526[i$527++], obj$530 = arr$526[i$527++], _noop$531, two$532 = obj$530.two, arr$533 = obj$530.nums, i$534 = 0, _noop$535, three$536 = arr$533[i$534++], four$537 = arr$533[i$534++];
+        expect$287(one$529).to.be(1);
+        expect$287(two$532).to.be(2);
+        expect$287(three$536).to.be(3);
+        expect$287(four$537).to.be(4);
+        var obj$561 = {
                 biz: [
                     8,
                     9
                 ],
                 fiz: 5
-            }, _noop$573, fiz$574 = obj$572.fiz, arr$575 = obj$572.biz, i$576 = 0, _noop$577, mum$578 = arr$575[i$576++], dum$579 = arr$575[i$576++];
-        expect$343(fiz$574).to.be(5);
-        expect$343(mum$578).to.be(8);
-        expect$343(dum$579).to.be(9);
-        var arr$603 = [
+            }, _noop$562, fiz$563 = obj$561.fiz, arr$564 = obj$561.biz, i$565 = 0, _noop$566, mum$567 = arr$564[i$565++], dum$568 = arr$564[i$565++];
+        expect$287(fiz$563).to.be(5);
+        expect$287(mum$567).to.be(8);
+        expect$287(dum$568).to.be(9);
+        var arr$592 = [
                 1,
                 {
                     two_: 2,
                     three_: 3
                 }
-            ], i$604 = 0, _noop$605, one_$606 = arr$603[i$604++], obj$607 = arr$603[i$604++], _noop$608, two_$609 = obj$607.two_, three_$610 = obj$607.three_ || 3000;
-        expect$343(one_$606).to.be(1);
-        expect$343(two_$609).to.be(2);
-        expect$343(three_$610).to.be(3);
-    });
-});
-describe('let' + ' keyword', function () {
-    it('should handle normal declarations', function () {
-        let x;
-        let y = 5;
-        let w = function () {
-        };
-        let z = x;
-    });
-    it('should basically work', function () {
-        let obj = {
-                one: 1,
-                two: 2
-            }, _noop, one = obj.one, two = obj.two;
-        expect$343(one).to.be(1);
-        expect$343(two).to.be(2);
-        let arr = [
-                1,
-                2
-            ], i = 0, _noop, foo = arr[i++], bar = arr[i++];
-        expect$343(foo).to.be(1);
-        expect$343(bar).to.be(2);
-    });
-    it('should rename', function () {
-        let obj = {
-                one: 1,
-                two: 2
-            }, _noop, val1 = obj.one;
-        expect$343(val1).to.be(1);
-    });
-    it('should set default values', function () {
-        let obj = { two: 2 }, _noop, one = obj.one || 1, two = obj.two;
-        expect$343(one).to.be(1);
-        expect$343(two).to.be(2);
-        let arr = [1], i = 0, _noop, foo = arr[i++], bar = arr[i++] || 2;
-        expect$343(foo).to.be(1);
-        expect$343(bar).to.be(2);
-    });
-    it('should handle multiple levels', function () {
-        let arr = [
-                1,
-                {
-                    bar: 2,
-                    baz: 3
-                }
-            ], i = 0, _noop, foo = arr[i++], obj = arr[i++], _noop, bar = obj.bar, baz = obj.baz;
-        expect$343(foo).to.be(1);
-        expect$343(bar).to.be(2);
-        expect$343(baz).to.be(3);
-        let arr = [
-                1,
-                {
-                    two: 2,
-                    nums: [
-                        3,
-                        4
-                    ]
-                }
-            ], i = 0, _noop, one = arr[i++], obj = arr[i++], _noop, two = obj.two, arr = obj.nums, i = 0, _noop, three = arr[i++], four = arr[i++];
-        expect$343(one).to.be(1);
-        expect$343(two).to.be(2);
-        expect$343(three).to.be(3);
-        expect$343(four).to.be(4);
-        let obj = {
-                biz: [
-                    8,
-                    9
-                ],
-                fiz: 5
-            }, _noop, fiz = obj.fiz, arr = obj.biz, i = 0, _noop, mum = arr[i++], dum = arr[i++];
-        expect$343(fiz).to.be(5);
-        expect$343(mum).to.be(8);
-        expect$343(dum).to.be(9);
-        let arr = [
-                1,
-                {
-                    two_: 2,
-                    three_: 3
-                }
-            ], i = 0, _noop, one_ = arr[i++], obj = arr[i++], _noop, two_ = obj.two_, three_ = obj.three_ || 3000;
-        expect$343(one_).to.be(1);
-        expect$343(two_).to.be(2);
-        expect$343(three_).to.be(3);
+            ], i$593 = 0, _noop$594, one_$595 = arr$592[i$593++], obj$596 = arr$592[i$593++], _noop$597, two_$598 = obj$596.two_, three_$599 = obj$596.three_ || 3000;
+        expect$287(one_$595).to.be(1);
+        expect$287(two_$598).to.be(2);
+        expect$287(three_$599).to.be(3);
     });
 });
 //# sourceMappingURL=destructure.js.map
