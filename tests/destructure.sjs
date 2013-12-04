@@ -46,7 +46,7 @@ macro testWithDecl {
                 $var {one = 1, two} = { two: 2 };
                 expect(one).to.be(1);
                 expect(two).to.be(2);
-                
+
                 $var [foo, bar = 2] = [1];
                 expect(foo).to.be(1);
                 expect(bar).to.be(2);
@@ -58,13 +58,13 @@ macro testWithDecl {
                 expect(foo).to.be(1);
                 expect(bar).to.be(2);
                 expect(baz).to.be(3);
-                
+
                 $var [one, {two, nums: [three, four]}] = [1, { two: 2, nums: [3, 4] }];
                 expect(one).to.be(1);
                 expect(two).to.be(2);
                 expect(three).to.be(3);
                 expect(four).to.be(4);
-                
+
                 $var { fiz, biz: [mum, dum] } = { biz: [8, 9], fiz: 5 };
                 expect(fiz).to.be(5);
                 expect(mum).to.be(8);
@@ -75,6 +75,16 @@ macro testWithDecl {
                 expect(one_).to.be(1);
                 expect(two_).to.be(2);
                 expect(three_).to.be(3);
+            });
+
+            it('should handle elision', function() {
+                $var [,,,four] = [1, 2, 3, 4];
+                expect(four).to.be(4);
+
+                $var [,,three,,,six] = [1, 2, 3, 4, 5, 6];
+                expect(three).to.be(3);
+                expect(six).to.be(6);
+
             });
         });
     }

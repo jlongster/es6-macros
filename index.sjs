@@ -22,6 +22,8 @@ macro _debug {
     }
 }
 
+// http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
+
 // TODO:
 // elision: var [,,,four] = arr;
 // rest: var [foo, bar, ...rst] = arr;
@@ -94,6 +96,10 @@ macro destruct_next {
 
     rule { $a $b ($acc ...), $pattern:expr } => {
         destruct_next $a $b ($acc ... , ($pattern))
+    }
+
+    rule { $a $b ($acc ...), } => {
+        destruct_next $a $b ($acc ... , (_noop))
     }
 
     // pass along normalized object
