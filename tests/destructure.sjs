@@ -97,6 +97,36 @@ macro testWithDecl {
                 expect(rest2[0]).to.be(3);
                 expect(rest2[1]).to.be(4);
             });
+
+            it('should function', function() {
+                function foo(x, y, [z, w]) {
+                    expect(z).to.be(5);
+                    expect(w).to.be(6);
+                }
+                foo(1, 2, [5, 6]);
+
+                function bar(x, y, {z, w}) {
+                    expect(z).to.be(5);
+                    expect(w).to.be(6);
+                }
+                bar(1, 2, { z: 5, w: 6 });
+
+                (function({ x, y, z }, callback) {
+                    expect(x).to.be(3);
+                    expect(y).to.be(4);
+                    expect(z).to.be(5);
+                })({ x: 3, y: 4, z: 5 });
+
+                function baz(x, y, { apple = true,
+                                     pear = false,
+                                     peach = 'default' }) {
+                    expect(apple).to.be(true);
+                    expect(pear).to.be(true);
+                    expect(peach).to.be('default');
+                }
+
+                baz(1, 2, { pear: true });
+            });
         });
     }
 }

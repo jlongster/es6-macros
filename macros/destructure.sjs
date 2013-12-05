@@ -1,32 +1,5 @@
 
-macro _debug {
-    case { $expr ... } => {
-        function collapse(stx) {
-            return stx.map(function(s) {
-                if(s.token.inner) {
-                    return s.token.value[0] +
-                        collapse(s.token.inner) +
-                        s.token.value[1];
-                }
-
-                return s.token.value;
-            }).join(' ');
-        }
-
-        var stx = #{ $expr ... };
-        var val = makeValue(collapse(stx), #{ctx});
-
-        return withSyntax($val = [val]) {
-            return #{$val}
-        }
-    }
-}
-
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
-
-// TODO:
-// rest: var [foo, bar, ...rst] = arr;
-// function args: function(foo, bar, { baz, poop }) {}
 
 macro destruct_objassign {
     rule { ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
@@ -175,5 +148,45 @@ export var
 // }
 // export const
 
-//var [,,,four] = arr;
-var [one, two, ..rest] = [1, 2, 3, 4, 5];
+// apply destructuring on functions arguments too
+
+macro parse_arg {
+    rule { ($args ...) ($acc ...) $body ([ $pattern ... ] $expr ...)} => {
+        parse_arg ($args ... _tmp) ($acc ... var [$pattern ...] = _tmp;) $body ($expr ...)
+    }
+
+    rule { ($args ...) ($acc ...) $body ({ $pattern ... } $expr ...)} => {
+        parse_arg ($args ... _tmp) ($acc ... var { $pattern ... } = _tmp;) $body ($expr ...)
+    }
+
+    rule { ($args ...) ($acc ...) $body (, $expr ...) } => {
+        parse_arg ($args ... ,) ($acc ...) $body ($expr ...)
+    }
+
+    rule { ($args ...) ($acc ...) $body ($param $expr ...) } => {
+        parse_arg ($args ... $param) ($acc ...) $body ($expr ...)
+    }
+
+    rule { $args ($acc ...) { $expr ... } () } => {
+        $args {
+            $acc ...
+            $expr ...
+        }
+    }
+
+    rule { $expr ... } => {
+        _debug $expr ...
+    }
+}
+
+let function = macro {
+    rule { $id:ident ($param (,) ...) $body } => {
+        function $id parse_arg () () $body ($param (,) ...)
+    }
+
+    rule { ($param (,) ...) $body } => {
+        function parse_arg () () $body ($param (,) ...)
+    }
+
+}
+export function
