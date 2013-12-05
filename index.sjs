@@ -148,6 +148,8 @@ export var
 // }
 // export const
 
+// apply destructuring on functions arguments too
+
 macro parse_arg {
     rule { ($args ...) ($acc ...) $body ([ $pattern ... ] $expr ...)} => {
         parse_arg ($args ... _tmp) ($acc ... var [$pattern ...] = _tmp;) $body ($expr ...)

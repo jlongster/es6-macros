@@ -3,7 +3,7 @@ var expect = require('expect.js');
 
 macro testWithDecl {
     rule { $var $name } => {
-        describe($name + ' keyword', function() {
+        describe('destructuring ' + $name + ' keyword', function() {
             it('should handle normal declarations', function() {
                 $var x;
                 $var y = 5;
@@ -87,6 +87,9 @@ macro testWithDecl {
             });
 
             it('should handle rest', function() {
+                // 2 dots instead of 3 until this bug is fixed: 
+                // https://github.com/mozilla/sweet.js/issues/142
+
                 $var [one, two, ..rest] = [1, 2, 3, 4];
                 expect(rest.length).to.be(2);
                 expect(rest[0]).to.be(3);
@@ -97,40 +100,44 @@ macro testWithDecl {
                 expect(rest2[0]).to.be(3);
                 expect(rest2[1]).to.be(4);
             });
-
-            it('should function', function() {
-                function foo(x, y, [z, w]) {
-                    expect(z).to.be(5);
-                    expect(w).to.be(6);
-                }
-                foo(1, 2, [5, 6]);
-
-                function bar(x, y, {z, w}) {
-                    expect(z).to.be(5);
-                    expect(w).to.be(6);
-                }
-                bar(1, 2, { z: 5, w: 6 });
-
-                (function({ x, y, z }, callback) {
-                    expect(x).to.be(3);
-                    expect(y).to.be(4);
-                    expect(z).to.be(5);
-                })({ x: 3, y: 4, z: 5 });
-
-                function baz(x, y, { apple = true,
-                                     pear = false,
-                                     peach = 'default' }) {
-                    expect(apple).to.be(true);
-                    expect(pear).to.be(true);
-                    expect(peach).to.be('default');
-                }
-
-                baz(1, 2, { pear: true });
-            });
         });
     }
 }
 
 testWithDecl var "var"
+
+// no let or const until sweet.js handles them, very soon
 //testWithDecl let "let"
 //testWithDecl const "const"
+
+describe('destructuring', function() {
+    it('should handle function args', function() {
+        function foo(x, y, [z, w]) {
+            expect(z).to.be(5);
+            expect(w).to.be(6);
+        }
+        foo(1, 2, [5, 6]);
+
+        function bar(x, y, {z, w}) {
+            expect(z).to.be(5);
+            expect(w).to.be(6);
+        }
+        bar(1, 2, { z: 5, w: 6 });
+
+        (function({ x, y, z }, callback) {
+            expect(x).to.be(3);
+            expect(y).to.be(4);
+            expect(z).to.be(5);
+        })({ x: 3, y: 4, z: 5 });
+
+        function baz(x, y, { apple = true,
+                             pear = false,
+                             peach = 'default' }) {
+            expect(apple).to.be(true);
+            expect(pear).to.be(true);
+            expect(peach).to.be('default');
+        }
+
+        baz(1, 2, { pear: true });
+    });
+});

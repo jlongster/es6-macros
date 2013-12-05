@@ -1,6 +1,6 @@
 'use strict';
 var expect$389 = require('expect.js');
-describe('var' + ' keyword', function () {
+describe('destructuring ' + 'var' + ' keyword', function () {
     it('should handle normal declarations', function () {
         var x$451;
         var y$455 = 5;
@@ -136,42 +136,46 @@ describe('var' + ' keyword', function () {
         expect$389(rest2$840[0]).to.be(3);
         expect$389(rest2$840[1]).to.be(4);
     });
-    it('should function', function () {
-        function foo$510(x$451, y$455, _tmp) {
-            var arr = _tmp, i = 0, _noop, z$465 = arr[i++], w$460 = arr[i++];
-            expect$389(z$465).to.be(5);
-            expect$389(w$460).to.be(6);
+});
+//testWithDecl let "let"
+//testWithDecl const "const"
+describe('destructuring', function () {
+    it('should handle function args', function () {
+        function foo(x$925, y$926, _tmp) {
+            var arr = _tmp, i = 0, _noop, z$884 = arr[i++], w$885 = arr[i++];
+            expect$389(z$884).to.be(5);
+            expect$389(w$885).to.be(6);
         }
-        foo$510(1, 2, [
+        foo(1, 2, [
             5,
             6
         ]);
-        function bar$511(x$451, y$455, _tmp) {
-            var obj = _tmp, _noop, z$465 = obj.z, w$460 = obj.w;
-            expect$389(z$465).to.be(5);
-            expect$389(w$460).to.be(6);
+        function bar(x$925, y$926, _tmp) {
+            var obj = _tmp, _noop, z$884 = obj.z, w$885 = obj.w;
+            expect$389(z$884).to.be(5);
+            expect$389(w$885).to.be(6);
         }
-        bar$511(1, 2, {
+        bar(1, 2, {
             z: 5,
             w: 6
         });
         (function (_tmp, callback) {
-            var obj = _tmp, _noop, x$451 = obj.x, y$455 = obj.y, z$465 = obj.z;
-            expect$389(x$451).to.be(3);
-            expect$389(y$455).to.be(4);
-            expect$389(z$465).to.be(5);
+            var obj = _tmp, _noop, x$925 = obj.x, y$926 = obj.y, z$884 = obj.z;
+            expect$389(x$925).to.be(3);
+            expect$389(y$926).to.be(4);
+            expect$389(z$884).to.be(5);
         }({
             x: 3,
             y: 4,
             z: 5
         }));
-        function baz$623(x$451, y$455, _tmp) {
-            var obj = _tmp, _noop, apple$939 = obj.apple || true, pear$940 = obj.pear || false, peach$941 = obj.peach || 'default';
-            expect$389(apple$939).to.be(true);
-            expect$389(pear$940).to.be(true);
-            expect$389(peach$941).to.be('default');
+        function baz(x$925, y$926, _tmp) {
+            var obj = _tmp, _noop, apple$946 = obj.apple || true, pear$947 = obj.pear || false, peach$948 = obj.peach || 'default';
+            expect$389(apple$946).to.be(true);
+            expect$389(pear$947).to.be(true);
+            expect$389(peach$948).to.be('default');
         }
-        baz$623(1, 2, { pear: true });
+        baz(1, 2, { pear: true });
     });
 });
 //# sourceMappingURL=destructure.js.map
