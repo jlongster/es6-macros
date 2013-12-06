@@ -3,7 +3,9 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             dist: {
-                src: [ 'macros/destructure.sjs', 'macros/class.sjs' ],
+                src: ['macros/util.sjs',
+                      'macros/destructure.sjs',
+                      'macros/class.sjs' ],
                 dest: 'index.sjs'
             }
         },

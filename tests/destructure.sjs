@@ -137,7 +137,6 @@ describe('destructuring', function() {
             expect(pear).to.be(true);
             expect(peach).to.be('default');
         }
-
         baz(1, 2, { pear: true });
     });
 });

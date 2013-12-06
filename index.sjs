@@ -1,4 +1,29 @@
 
+macro _debug {
+    case { $expr ... } => {
+        function collapse(stx) {
+            return stx.map(function(s) {
+                if(s.token.inner) {
+                    return s.token.value[0] +
+                        collapse(s.token.inner) +
+                        s.token.value[1];
+                }
+
+                return s.token.value;
+            }).join(' ');
+        }
+
+        var stx = #{ $expr ... };
+        var val = makeValue(collapse(stx), #{ctx});
+
+        return withSyntax($val = [val]) {
+            return #{$val}
+        }
+    }
+}
+
+
+
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
 macro destruct_objassign {
@@ -192,4 +217,81 @@ let function = macro {
 export function
 
 
-// TODO: ES6 classes
+// http://people.mozilla.org/~jorendorff/es6-draft.html#sec-class-definitions
+
+macro install_super {
+    rule { $parent { $before ... super() $after ... } } => {
+        install_super $parent {
+            $before ...
+            $parent.call(this)
+            $after ...
+        }
+    }
+
+    rule { $parent { $before ... super($arg ...) $after ... } } => {
+        install_super $parent {
+            $before ...
+            $parent.call(this, $arg ...)
+            $after ...
+        }
+    }
+
+    rule { $parent { $before ... super.$method() $after ... } } => {
+        install_super $parent {
+            $before ...
+            $parent.prototype.$method.call(this)
+            $after ...
+        }
+    }
+
+    rule { $parent { $before ... super.$method($arg ...) $after ... } } => {
+        install_super $parent {
+            $before ...
+            $parent.prototype.$method.call(this, $arg ...)
+            $after ...
+        }
+    }
+
+    rule { $parent { $body ... } } => {
+        $body ...
+    }
+
+}
+
+macro class {
+    rule {
+        $typename extends $parent {
+            constructor $cparams $cbody
+            $($mname $mparams $mbody) ...
+        }
+    } => {
+        function $typename $cparams { install_super $parent $cbody }
+
+        $typename.prototype = Object.create($parent.prototype);
+        $($typename.prototype.$mname = function $mname $mparams 
+          { install_super $parent $mbody };) ...
+    }
+
+    rule {
+        $typename {
+            constructor $cparams $cbody
+            $($mname $mparams $mbody) ...
+        }
+    } => {
+        function $typename $cparams $cbody
+
+        $($typename.prototype.$mname = function $mname $mparams $mbody;) ...
+    }
+
+    rule {
+        $typedef ... {
+            $methods ...
+        }
+    } => {
+        class $typedef ... {
+            constructor() {}
+            $methods ...
+        }
+    }
+}
+export class
