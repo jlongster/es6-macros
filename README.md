@@ -7,12 +7,11 @@ ES5 JavaScript, which can be used today everywhere.
 
 Currently implemented:
 
-* destructuring (all except elision, rest, and function args)
+* destructuring (including elision, rest, and function args)
+* classes
 
 TODO:
 
-* finish destructuring
-* classes
 * rest and default arguments
 * spread operator for applying arguments
 * possibly limited `for of` support
