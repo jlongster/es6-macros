@@ -38,7 +38,8 @@ macro install_super {
                     
                     if(n.token.type == parser.Token.Delimiter) {
                         if(n.token.value == '[]') {
-                            var refstx = withSyntax($ref = [n]) {
+                            var refstx;
+                            refstx = withSyntax($ref = [n]) {
                                 return #{ $parent.prototype $ref };
                             }
 
@@ -52,9 +53,12 @@ macro install_super {
                             }
                             args.token.inner = pre.concat(args.token.inner);
 
-                            return withSyntax($args = [args]) {
+                            var refstx;
+                            refstx = withSyntax($args = [args]) {
                                 return #{ $parent.call $args }
                             }
+
+                            res = res.concat(refstx);
                         }
                         else {
                             throwSyntaxError('class', 'invalid use of super', s);
@@ -107,7 +111,7 @@ macro install_super {
     }
 }
 
-macro class {
+let class = macro {
     rule {
         $typename extends $parent {
             constructor $cparams $cbody
@@ -137,41 +141,24 @@ macro class {
             $methods ...
         }
     } => {
-        class $typedef ... {
+        class_constructor $typedef ... {
             constructor() {}
             $methods ...
         }
     }
 }
-export class
 
-class Foo {
-    constructor(x) {
-        this.fooX = x + 5;
-    }
-
-    getX() {
-        return this.fooX;
-    }
-}
-
-class Bar extends Foo {
-    constructor(x) {
-        super(x);
-        this.barX = x;
-    }
-
-    getX() {
-        return this.barX;
-    }
-
-    getFooX() {
-        if(true) {
-            return super.getX();
+// hack to recurse down into `class` (which needs to be a let macro
+// because we don't have proper modules yet
+macro class_constructor {
+    rule {
+        $typedef ... {
+            $methods ...
+        }
+    } => {
+        class $typedef ... {
+            $methods ...
         }
     }
 }
-
-// install_super Foo {
-//     super[method + 'sdfdsf']
-// }
+export class

@@ -1,4 +1,5 @@
-'use strict';
+//"use strict";
+
 var expect = require('expect.js');
 
 describe('class', function() {
@@ -18,7 +19,8 @@ describe('class', function() {
 
         class FooWithMethod {
             length() {
-                var {x, y} = this;
+                var x = this.x;
+                var y = this.y;
                 return x * x + y * y;
             }
         }
@@ -30,7 +32,8 @@ describe('class', function() {
             }
 
             length() {
-                var {x, y} = this;
+                var x = this.x;
+                var y = this.y;
                 return x * x + y * y;
             }
 
@@ -71,6 +74,14 @@ describe('class', function() {
             getFooX() {
                 return super.getX();
             }
+
+            complicated() {
+                if(this.barX > 2) {
+                    return super.getX();
+                }
+
+                return 1;
+            }
         }
 
         var b = new Bar(5);
@@ -78,5 +89,6 @@ describe('class', function() {
         expect(b.barX).to.be(5);
         expect(b.getX()).to.be(5);
         expect(b.getFooX()).to.be(10);
+        expect(b.complicated()).to.be(10);
     });
 });

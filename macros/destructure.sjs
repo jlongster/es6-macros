@@ -114,7 +114,7 @@ let var = macro {
         var destruct_next ($obj) $var
     }
 
-    rule { $id } => {
+    rule { $id:ident } => {
         var $id
     }
 }

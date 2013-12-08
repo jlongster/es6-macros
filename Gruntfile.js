@@ -4,8 +4,8 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: ['macros/util.sjs',
-                      'macros/destructure.sjs',
-                      'macros/class.sjs' ],
+                      'macros/class.sjs',
+                      'macros/destructure.sjs' ],
                 dest: 'index.sjs'
             }
         },
