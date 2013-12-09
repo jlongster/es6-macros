@@ -1,51 +1,51 @@
 'use strict';
-var expect$1194 = require('expect.js');
+var expect$1234 = require('expect.js');
 describe('destructuring ' + 'var' + ' keyword', function () {
     it('should handle normal declarations', function () {
-        var x$1228;
-        var y$1232 = 5;
-        var w$1236 = function () {
+        var x$1268;
+        var y$1272 = 5;
+        var w$1276 = function () {
         };
-        var z$1241 = x$1228;
-        for (var i$1248 = 0; i$1248 < 5; i$1248++) {
+        var z$1281 = x$1268;
+        for (var i$1288 = 0; i$1288 < 5; i$1288++) {
         }
     });
     it('should basically work', function () {
         var obj = {
                 one: 1,
                 two: 2
-            }, _noop, one$1266 = obj.one, two$1267 = obj.two;
-        expect$1194(one$1266).to.be(1);
-        expect$1194(two$1267).to.be(2);
+            }, _noop, one$1306 = obj.one, two$1307 = obj.two;
+        expect$1234(one$1306).to.be(1);
+        expect$1234(two$1307).to.be(2);
         var arr = [
                 1,
                 2
-            ], i = 0, _noop, foo$1284 = arr[i++], bar$1285 = arr[i++];
-        expect$1194(foo$1284).to.be(1);
-        expect$1194(bar$1285).to.be(2);
-        var i$1248 = 0;
-        var arr$1292 = [
+            ], i = 0, _noop, foo$1324 = arr[i++], bar$1325 = arr[i++];
+        expect$1234(foo$1324).to.be(1);
+        expect$1234(bar$1325).to.be(2);
+        var i$1288 = 0;
+        var arr$1332 = [
                 0,
                 5
             ];
-        for (var arr = arr$1292, i = 0, _noop, i$1248 = arr[i++], n$1322 = arr[i++]; i$1248 < 10; i$1248++) {
-            expect$1194(n$1322).to.be(5);
+        for (var arr = arr$1332, i = 0, _noop, i$1288 = arr[i++], n$1362 = arr[i++]; i$1288 < 10; i$1288++) {
+            expect$1234(n$1362).to.be(5);
         }
     });
     it('should rename', function () {
         var obj = {
                 one: 1,
                 two: 2
-            }, _noop, val1$1336 = obj.one;
-        expect$1194(val1$1336).to.be(1);
+            }, _noop, val1$1376 = obj.one;
+        expect$1234(val1$1376).to.be(1);
     });
     it('should set default values', function () {
-        var obj = { two: 2 }, _noop, one$1266 = obj.one || 1, two$1267 = obj.two;
-        expect$1194(one$1266).to.be(1);
-        expect$1194(two$1267).to.be(2);
-        var arr = [1], i = 0, _noop, foo$1284 = arr[i++], bar$1285 = arr[i++] || 2;
-        expect$1194(foo$1284).to.be(1);
-        expect$1194(bar$1285).to.be(2);
+        var obj = { two: 2 }, _noop, one$1306 = obj.one || 1, two$1307 = obj.two;
+        expect$1234(one$1306).to.be(1);
+        expect$1234(two$1307).to.be(2);
+        var arr = [1], i = 0, _noop, foo$1324 = arr[i++], bar$1325 = arr[i++] || 2;
+        expect$1234(foo$1324).to.be(1);
+        expect$1234(bar$1325).to.be(2);
     });
     it('should handle multiple levels', function () {
         var arr = [
@@ -54,10 +54,10 @@ describe('destructuring ' + 'var' + ' keyword', function () {
                     bar: 2,
                     baz: 3
                 }
-            ], i = 0, _noop, foo$1284 = arr[i++], obj = arr[i++], _noop, bar$1285 = obj.bar, baz$1400 = obj.baz;
-        expect$1194(foo$1284).to.be(1);
-        expect$1194(bar$1285).to.be(2);
-        expect$1194(baz$1400).to.be(3);
+            ], i = 0, _noop, foo$1324 = arr[i++], obj = arr[i++], _noop, bar$1325 = obj.bar, baz$1440 = obj.baz;
+        expect$1234(foo$1324).to.be(1);
+        expect$1234(bar$1325).to.be(2);
+        expect$1234(baz$1440).to.be(3);
         var arr = [
                 1,
                 {
@@ -67,31 +67,31 @@ describe('destructuring ' + 'var' + ' keyword', function () {
                         4
                     ]
                 }
-            ], i = 0, _noop, one$1266 = arr[i++], obj = arr[i++], _noop, two$1267 = obj.two, arr = obj.nums, i = 0, _noop, three$1442 = arr[i++], four$1443 = arr[i++];
-        expect$1194(one$1266).to.be(1);
-        expect$1194(two$1267).to.be(2);
-        expect$1194(three$1442).to.be(3);
-        expect$1194(four$1443).to.be(4);
+            ], i = 0, _noop, one$1306 = arr[i++], obj = arr[i++], _noop, two$1307 = obj.two, arr = obj.nums, i = 0, _noop, three$1482 = arr[i++], four$1483 = arr[i++];
+        expect$1234(one$1306).to.be(1);
+        expect$1234(two$1307).to.be(2);
+        expect$1234(three$1482).to.be(3);
+        expect$1234(four$1483).to.be(4);
         var obj = {
                 biz: [
                     8,
                     9
                 ],
                 fiz: 5
-            }, _noop, fiz$1469 = obj.fiz, arr = obj.biz, i = 0, _noop, mum$1473 = arr[i++], dum$1474 = arr[i++];
-        expect$1194(fiz$1469).to.be(5);
-        expect$1194(mum$1473).to.be(8);
-        expect$1194(dum$1474).to.be(9);
+            }, _noop, fiz$1509 = obj.fiz, arr = obj.biz, i = 0, _noop, mum$1513 = arr[i++], dum$1514 = arr[i++];
+        expect$1234(fiz$1509).to.be(5);
+        expect$1234(mum$1513).to.be(8);
+        expect$1234(dum$1514).to.be(9);
         var arr = [
                 1,
                 {
                     two_: 2,
                     three_: 3
                 }
-            ], i = 0, _noop, one_$1501 = arr[i++], obj = arr[i++], _noop, two_$1504 = obj.two_, three_$1505 = obj.three_ || 3000;
-        expect$1194(one_$1501).to.be(1);
-        expect$1194(two_$1504).to.be(2);
-        expect$1194(three_$1505).to.be(3);
+            ], i = 0, _noop, one_$1541 = arr[i++], obj = arr[i++], _noop, two_$1544 = obj.two_, three_$1545 = obj.three_ || 3000;
+        expect$1234(one_$1541).to.be(1);
+        expect$1234(two_$1544).to.be(2);
+        expect$1234(three_$1545).to.be(3);
     });
     it('should handle elision', function () {
         var arr = [
@@ -99,8 +99,8 @@ describe('destructuring ' + 'var' + ' keyword', function () {
                 2,
                 3,
                 4
-            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], _noop = arr[i++], four$1443 = arr[i++];
-        expect$1194(four$1443).to.be(4);
+            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], _noop = arr[i++], four$1483 = arr[i++];
+        expect$1234(four$1483).to.be(4);
         var arr = [
                 1,
                 2,
@@ -108,9 +108,9 @@ describe('destructuring ' + 'var' + ' keyword', function () {
                 4,
                 5,
                 6
-            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], three$1442 = arr[i++], _noop = arr[i++], _noop = arr[i++], six$1571 = arr[i++];
-        expect$1194(three$1442).to.be(3);
-        expect$1194(six$1571).to.be(6);
+            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], three$1482 = arr[i++], _noop = arr[i++], _noop = arr[i++], six$1611 = arr[i++];
+        expect$1234(three$1482).to.be(3);
+        expect$1234(six$1611).to.be(6);
     });
     it('should handle rest', function () {
         var arr = [
@@ -118,19 +118,19 @@ describe('destructuring ' + 'var' + ' keyword', function () {
                 2,
                 3,
                 4
-            ], i = 0, _noop, one$1266 = arr[i++], two$1267 = arr[i++], rest$1594 = arr.slice(i);
-        expect$1194(rest$1594.length).to.be(2);
-        expect$1194(rest$1594[0]).to.be(3);
-        expect$1194(rest$1594[1]).to.be(4);
+            ], i = 0, _noop, one$1306 = arr[i++], two$1307 = arr[i++], rest$1634 = arr.slice(i);
+        expect$1234(rest$1634.length).to.be(2);
+        expect$1234(rest$1634[0]).to.be(3);
+        expect$1234(rest$1634[1]).to.be(4);
         var arr = [
                 1,
                 2,
                 3,
                 4
-            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], rest2$1617 = arr.slice(i);
-        expect$1194(rest2$1617.length).to.be(2);
-        expect$1194(rest2$1617[0]).to.be(3);
-        expect$1194(rest2$1617[1]).to.be(4);
+            ], i = 0, _noop, _noop = arr[i++], _noop = arr[i++], rest2$1657 = arr.slice(i);
+        expect$1234(rest2$1657.length).to.be(2);
+        expect$1234(rest2$1657[0]).to.be(3);
+        expect$1234(rest2$1657[1]).to.be(4);
     });
 });
 // no let or const until sweet.js handles them, very soon
@@ -138,39 +138,39 @@ describe('destructuring ' + 'var' + ' keyword', function () {
 //testWithDecl const "const"
 describe('destructuring', function () {
     it('should handle function args', function () {
-        function foo(x$1702, y$1703, _tmp) {
-            var arr = _tmp, i = 0, _noop, z$1661 = arr[i++], w$1662 = arr[i++];
-            expect$1194(z$1661).to.be(5);
-            expect$1194(w$1662).to.be(6);
+        function foo(x$1742, y$1743, _tmp) {
+            var arr = _tmp, i = 0, _noop, z$1701 = arr[i++], w$1702 = arr[i++];
+            expect$1234(z$1701).to.be(5);
+            expect$1234(w$1702).to.be(6);
         }
         foo(1, 2, [
             5,
             6
         ]);
-        function bar(x$1702, y$1703, _tmp) {
-            var obj = _tmp, _noop, z$1661 = obj.z, w$1662 = obj.w;
-            expect$1194(z$1661).to.be(5);
-            expect$1194(w$1662).to.be(6);
+        function bar(x$1742, y$1743, _tmp) {
+            var obj = _tmp, _noop, z$1701 = obj.z, w$1702 = obj.w;
+            expect$1234(z$1701).to.be(5);
+            expect$1234(w$1702).to.be(6);
         }
         bar(1, 2, {
             z: 5,
             w: 6
         });
         (function (_tmp, callback) {
-            var obj = _tmp, _noop, x$1702 = obj.x, y$1703 = obj.y, z$1661 = obj.z;
-            expect$1194(x$1702).to.be(3);
-            expect$1194(y$1703).to.be(4);
-            expect$1194(z$1661).to.be(5);
+            var obj = _tmp, _noop, x$1742 = obj.x, y$1743 = obj.y, z$1701 = obj.z;
+            expect$1234(x$1742).to.be(3);
+            expect$1234(y$1743).to.be(4);
+            expect$1234(z$1701).to.be(5);
         }({
             x: 3,
             y: 4,
             z: 5
         }));
-        function baz(x$1702, y$1703, _tmp) {
-            var obj = _tmp, _noop, apple$1723 = obj.apple || true, pear$1724 = obj.pear || false, peach$1725 = obj.peach || 'default';
-            expect$1194(apple$1723).to.be(true);
-            expect$1194(pear$1724).to.be(true);
-            expect$1194(peach$1725).to.be('default');
+        function baz(x$1742, y$1743, _tmp) {
+            var obj = _tmp, _noop, apple$1763 = obj.apple || true, pear$1764 = obj.pear || false, peach$1765 = obj.peach || 'default';
+            expect$1234(apple$1763).to.be(true);
+            expect$1234(pear$1764).to.be(true);
+            expect$1234(peach$1765).to.be('default');
         }
         baz(1, 2, { pear: true });
     });

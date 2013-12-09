@@ -93,7 +93,7 @@ describe('class', function() {
                     }
                 }
 
-                return run();
+                return run.call(this);
             }
 
             getMethod() {
@@ -112,6 +112,7 @@ describe('class', function() {
         expect(b.getX()).to.be(5);
         expect(b.getFooX()).to.be(10);
         expect(b.nested()).to.be(10);
+        expect(b.nestedFunction()).to.be(10);
         expect(expect(b.getMethod().call(b)).to.be(10));
         expect(expect(b.getMethod2().call(b)).to.be(10));
     });
