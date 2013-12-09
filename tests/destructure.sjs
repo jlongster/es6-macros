@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 var expect = require('expect.js');
 
 macro testWithDecl {
@@ -10,11 +10,8 @@ macro testWithDecl {
                 $var w = function(){};
                 $var z = x;
 
-                $var result;
                 for($var i=0; i<5; i++) {
-                    result = i;
                 }
-                expect(i).to.be(5);
             });
 
             it('should basically work', function() {
@@ -27,12 +24,11 @@ macro testWithDecl {
                 expect(foo).to.be(1);
                 expect(bar).to.be(2);
 
-                $var result;
-                $var arr = [1, 2];
-                for($var [x, y] = arr; x < 10; x++) {
-                    result = y * 2;
+                $var i = 0;
+                $var arr = [0, 5];
+                for($var [i, n] = arr; i < 10; i++) {
+                    expect(n).to.be(5);
                 }
-                expect(result).to.be(4);
             });
 
             it('should rename', function() {

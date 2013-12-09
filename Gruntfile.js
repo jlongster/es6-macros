@@ -5,7 +5,11 @@ module.exports = function(grunt) {
             dist: {
                 src: ['macros/util.sjs',
                       'macros/class.sjs',
-                      'macros/destructure.sjs' ],
+
+                      // destructure must come last, so that `var` in
+                      // any case macros is not overriden (those have
+                      // special syntax)
+                      'macros/destructure.sjs'],
                 dest: 'index.sjs'
             }
         },

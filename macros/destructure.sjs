@@ -1,4 +1,6 @@
 
+// TODO: force "inside-out" expansion?
+
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
 macro destruct_objassign {
@@ -174,9 +176,9 @@ macro parse_arg {
         }
     }
 
-    rule { $expr ... } => {
-        _debug $expr ...
-    }
+    // rule { $expr ... } => {
+    //     _debug $expr ...
+    // }
 }
 
 let function = macro {

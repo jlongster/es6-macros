@@ -1,5 +1,4 @@
-//"use strict";
-
+"use strict";
 var expect = require('expect.js');
 
 describe('class', function() {
@@ -75,13 +74,36 @@ describe('class', function() {
                 return super.getX();
             }
 
-            complicated() {
-                if(this.barX > 2) {
-                    return super.getX();
+            nested() {
+                if(true) {
+                    if(this.barX > 2) {
+                        return super.getX();
+                    }
                 }
 
                 return 1;
             }
+
+            nestedFunction() {
+                function run() {
+                    if(true) {
+                        if(this.barX > 2) {
+                            return super.getX();
+                        }
+                    }
+                }
+
+                return run();
+            }
+
+            getMethod() {
+                return super.getX;
+            }
+
+            getMethod2() {
+                return super['getX'];
+            }
+
         }
 
         var b = new Bar(5);
@@ -89,6 +111,8 @@ describe('class', function() {
         expect(b.barX).to.be(5);
         expect(b.getX()).to.be(5);
         expect(b.getFooX()).to.be(10);
-        expect(b.complicated()).to.be(10);
+        expect(b.nested()).to.be(10);
+        expect(expect(b.getMethod().call(b)).to.be(10));
+        expect(expect(b.getMethod2().call(b)).to.be(10));
     });
 });

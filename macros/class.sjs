@@ -19,7 +19,7 @@ macro install_super {
                     res.push(stx[i++]);
 
                     // optional function ident
-                    if(stx[i + 1].token.type == parser.Token.Identifier) {
+                    if(stx[i].token.type == parser.Token.Identifier) {
                         res.push(stx[i++]);
                     }
 
@@ -38,8 +38,7 @@ macro install_super {
                     
                     if(n.token.type == parser.Token.Delimiter) {
                         if(n.token.value == '[]') {
-                            var refstx;
-                            refstx = withSyntax($ref = [n]) {
+                            var refstx = withSyntax($ref = [n]) {
                                 return #{ $parent.prototype $ref };
                             }
 
@@ -53,8 +52,7 @@ macro install_super {
                             }
                             args.token.inner = pre.concat(args.token.inner);
 
-                            var refstx;
-                            refstx = withSyntax($args = [args]) {
+                            var refstx = withSyntax($args = [args]) {
                                 return #{ $parent.call $args }
                             }
 
