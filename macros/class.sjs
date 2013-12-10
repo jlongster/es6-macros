@@ -41,7 +41,7 @@ macro install_super {
 
                     // body: { $expr ... }
                     stx[i].token.inner = search(stx[i].token.inner, true);
-                    res.push(stx[i++]);
+                    res.push(stx[i]);
                 }
                 else if(s.token.value == 'super') {
                     var n = stx[++i];
@@ -177,58 +177,3 @@ macro class_constructor {
     }
 }
 export class
-
-class Foo {
-    getX() {
-        return this.fooX;
-    }
-}
-
-class Bar extends Foo {
-    constructor(x) {
-        super(x);
-        this.barX = x;
-    }
-
-    getX() {
-        return this.barX;
-    }
-
-    getFooX() {
-        return super.getX();
-    }
-
-    nested() {
-        if(true) {
-            if(this.barX > 2) {
-                return super.getX();
-            }
-        }
-
-        return 1;
-    }
-
-    nestedFunction() {
-        var y = getArray();
-        var x = arr.map(function() {
-            if(true) {
-                if(this.barX > 2) {
-                    foo(function() {
-                        return super.getX();
-                    });
-                }
-            }
-        });
-
-        return run();
-    }
-
-    getMethod() {
-        return super.getX;
-    }
-
-    getMethod2() {
-        return super['getX'];
-    }
-
-}
