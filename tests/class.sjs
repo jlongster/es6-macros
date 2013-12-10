@@ -3,18 +3,15 @@ var expect = require('expect.js');
 
 describe('class', function() {
     it('should create a class', function() {
-        // next 2 cases don't work until this bug is fixed:
-        // https://github.com/mozilla/sweet.js/issues/147
+        class FooEmpty {
+        }
 
-        // class FooEmpty {
-        // }
-
-        // class FooSimple {
-        //     constructor(x, y) {
-        //         this.x = x;
-        //         this.y = y;
-        //     }
-        // }
+        class FooSimple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
 
         class FooWithMethod {
             length() {
