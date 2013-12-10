@@ -111,7 +111,7 @@ describe('class', function() {
         expect(b.getFooX()).to.be(10);
         expect(b.nested()).to.be(10);
         expect(b.nestedFunction()).to.be(10);
-        // expect(expect(b.getMethod().call(b)).to.be(10));
-        // expect(expect(b.getMethod2().call(b)).to.be(10));
+        expect(expect(b.getMethod().call(b)).to.be(10));
+        expect(expect(b.getMethod2().call(b)).to.be(10));
     });
 });

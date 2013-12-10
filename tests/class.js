@@ -86,6 +86,8 @@ describe('class', function () {
         expect$569(b$621.getFooX()).to.be(10);
         expect$569(b$621.nested()).to.be(10);
         expect$569(b$621.nestedFunction()).to.be(10);
+        expect$569(expect$569(b$621.getMethod().call(b$621)).to.be(10));
+        expect$569(expect$569(b$621.getMethod2().call(b$621)).to.be(10));
     });
 });
 //# sourceMappingURL=class.js.map
