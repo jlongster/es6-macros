@@ -1,5 +1,5 @@
 'use strict';
-var expect$585 = require('expect.js');
+var expect$591 = require('expect.js');
 describe('class', function () {
     it('should create a class', function () {
         // next 2 cases don't work until this bug is fixed:
@@ -12,82 +12,81 @@ describe('class', function () {
         //         this.y = y;
         //     }
         // }
-        function FooWithMethod$596() {
+        function FooWithMethod$602() {
         }
-        FooWithMethod$596.prototype.length = function length$597() {
-            var x$609 = this.x;
-            var y$613 = this.y;
-            return x$609 * x$609 + y$613 * y$613;
+        FooWithMethod$602.prototype.length = function length$603() {
+            var x$615 = this.x;
+            var y$619 = this.y;
+            return x$615 * x$615 + y$619 * y$619;
         };
-        function Foo$599(x$614, y$615) {
-            this.x = x$614;
-            this.y = y$615;
+        function Foo$605(x$620, y$621) {
+            this.x = x$620;
+            this.y = y$621;
         }
-        Foo$599.prototype.length = function length$597() {
-            var x$619 = this.x;
-            var y$623 = this.y;
-            return x$619 * x$619 + y$623 * y$623;
+        Foo$605.prototype.length = function length$603() {
+            var x$625 = this.x;
+            var y$629 = this.y;
+            return x$625 * x$625 + y$629 * y$629;
         };
-        Foo$599.prototype.getX = function getX$600() {
+        Foo$605.prototype.getX = function getX$606() {
             return this.x;
         };
-        Foo$599.prototype.getY = function getY$601() {
+        Foo$605.prototype.getY = function getY$607() {
             return this.y;
         };
-        var f$605 = new Foo$599(1, 2);
-        expect$585(f$605.x).to.be(1);
+        var f$611 = new Foo$605(1, 2);
+        expect$591(f$611.x).to.be(1);
     });
     it('should support super', function () {
-        function Foo$599(x$638) {
-            this.fooX = x$638 + 5;
+        function Foo$605(x$644) {
+            this.fooX = x$644 + 5;
         }
-        Foo$599.prototype.getX = function getX$600() {
+        Foo$605.prototype.getX = function getX$606() {
             return this.fooX;
         };
-        function Bar$628(x$639) {
-            Foo$599.call(this, x$639);
-            this.barX = x$639;
+        function Bar$634(x$645) {
+            $parent.call(this, x$645);
+            this.barX = x$645;
         }
-        Bar$628.prototype = Object.create(Foo$599.prototype);
-        Bar$628.prototype.getX = function getX$600() {
+        Bar$634.prototype = Object.create(Foo$605.prototype);
+        Bar$634.prototype.getX = function getX$606() {
             return this.barX;
         };
-        Bar$628.prototype.getFooX = function getFooX$629() {
-            return Object.getPrototypeOf(Object.getPrototypeOf(this)).getX.call(this);
+        Bar$634.prototype.getFooX = function getFooX$635() {
+            return Object.getPrototypeOf(Bar$634.prototype).getX.call(this);
         };
-        Bar$628.prototype.nested = function nested$630() {
+        Bar$634.prototype.nested = function nested$636() {
             if (true) {
                 if (this.barX > 2) {
-                    return Object.getPrototypeOf(Object.getPrototypeOf(this)).getX.call(this);
+                    return Object.getPrototypeOf(Bar$634.prototype).getX.call(this);
                 }
             }
             return 1;
         };
-        Bar$628.prototype.nestedFunction = function nestedFunction$631() {
+        Bar$634.prototype.nestedFunction = function nestedFunction$637() {
+            var self$651 = this;
             function run() {
                 if (true) {
-                    if (this.barX > 2) {
-                        return Object.getPrototypeOf(Object.getPrototypeOf(this)).getX.call(this);
-                    }
+                    return Object.getPrototypeOf(Bar$634.prototype).getX.call(self$651);
                 }
             }
-            return run.call(this);
+            run.call(this);
         };
-        Bar$628.prototype.getMethod = function getMethod$632() {
-            return Object.getPrototypeOf(Object.getPrototypeOf(this)).getX;
+        Bar$634.prototype.getMethod = function getMethod$638() {
+            return Object.getPrototypeOf(Bar$634.prototype).getX;
         };
-        Bar$628.prototype.getMethod2 = function getMethod2$633() {
-            return Object.getPrototypeOf(Object.getPrototypeOf(this))['getX'];
+        Bar$634.prototype.getMethod2 = function getMethod2$639() {
+            return Object.getPrototypeOf(Bar$634.prototype)['getX'];
         };
-        var b$637 = new Bar$628(5);
-        expect$585(b$637.fooX).to.be(10);
-        expect$585(b$637.barX).to.be(5);
-        expect$585(b$637.getX()).to.be(5);
-        expect$585(b$637.getFooX()).to.be(10);
-        expect$585(b$637.nested()).to.be(10);
-        expect$585(b$637.nestedFunction()).to.be(10);
-        expect$585(expect$585(b$637.getMethod().call(b$637)).to.be(10));
-        expect$585(expect$585(b$637.getMethod2().call(b$637)).to.be(10));
+        var b$643 = new Bar$634(5);
+        expect$591(b$643.fooX).to.be(10);
+        expect$591(b$643.barX).to.be(5);
+        expect$591(b$643.getX()).to.be(5);
+        expect$591(b$643.getFooX()).to.be(10);
+        expect$591(b$643.nested()).to.be(10);
+        expect$591(b$643.nestedFunction()).to.be(10);
+        expect$591(expect$591(b$643.getMethod().call(b$643)).to.be(10));
+        expect$591(expect$591(b$643.getMethod2().call(b$643)).to.be(10));
     });
 });
 //# sourceMappingURL=class.js.map

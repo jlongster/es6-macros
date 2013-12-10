@@ -2,41 +2,72 @@
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-class-definitions
 
 macro install_super {
-    case { _ $parent { $body ... } } => {
+    case { $ctx $cls { $body ... } } => {
         var stx = #{ $body ... };
-        return search(stx);
+        var saveThis = false;
+        var res = search(stx);
 
-        function search(stx) {
+        if(saveThis) {
+            res = [makeKeyword('var'),
+                   makeIdent('self', stx[0]),
+                   makePunc('='),
+                   makeIdent('this')].concat(res);
+        }
+
+        return res;
+
+        function search(stx, inFunction) {
             var res = [];
+            var insideFunc = false;
 
             for(var i=0; i<stx.length; i++) {
                 var s = stx[i];
 
                 if(s.token.type == parser.Token.Delimiter) {
-                    s.token.inner = search(s.token.inner);
+                    s.token.inner = search(s.token.inner, inFunction);
                     res.push(s);
+                }
+                else if(s.token.value == 'function') {
+                    // function keyword
+                    res.push(stx[i++]);
+                    
+                    // optional function ident
+                    if(stx[i].token.type == parser.Token.Identifier) {
+                        res.push(stx[i++]);
+                    }
+
+                    // arg list: ($arg1 (,) ...)
+                    res.push(stx[i++]);
+
+                    // body: { $expr ... }
+                    stx[i].token.inner = search(stx[i].token.inner, true);
+                    res.push(stx[i++]);
                 }
                 else if(s.token.value == 'super') {
                     var n = stx[++i];
+
+                    if(inFunction) {
+                        saveThis = true;
+                    }
                     
                     if(n.token.type == parser.Token.Delimiter) {
                         if(n.token.value == '[]') {
                             var refstx = withSyntax($ref = [n]) {
-                                return #{ Object.getPrototypeOf(Object.getPrototypeOf(this)) $ref };
+                                return #{ Object.getPrototypeOf($cls.prototype) $ref };
                             }
 
                             res = res.concat(refstx);
                         }
                         else if(n.token.value == '()') {
                             var args = n;
-                            var pre = [makeIdent('this')];
+                            var pre = [makeIdent(inFunction ? 'self' : 'this')];
                             if(args.token.inner.length) {
                                 pre.push(makePunc(','));
                             }
                             args.token.inner = pre.concat(args.token.inner);
 
                             var refstx = withSyntax($args = [args]) {
-                                return #{ $parent.call $args }
+                                return #{ Object.getPrototypeOf($cls.prototype).constructor.call $args }
                             }
 
                             res = res.concat(refstx);
@@ -56,20 +87,20 @@ macro install_super {
                            args.token.value == '()') {
                             
                             // prepend `this` to the arguments
-                            var pre = [makeIdent('this')];
+                            var pre = [makeIdent(inFunction? 'self' : 'this')];
                             if(args.token.inner.length) {
                                 pre.push(makePunc(','));
                             }
                             args.token.inner = pre.concat(args.token.inner);
 
                             refstx = withSyntax($prop = [prop], $args = [args]) {
-                                return #{ Object.getPrototypeOf(Object.getPrototypeOf(this))
+                                return #{ Object.getPrototypeOf($cls.prototype)
                                             .$prop.call $args };
                             }
                         }
                         else {
                             refstx = withSyntax($prop = [prop]) {
-                                return #{ Object.getPrototypeOf(Object.getPrototypeOf(this)).$prop };
+                                return #{ Object.getPrototypeOf($cls.prototype).$prop };
                             };
                         }
 
@@ -100,11 +131,11 @@ let class = macro {
             $($mname $mparams $mbody) ...
         }
     } => {
-        function $typename $cparams { install_super $parent $cbody }
+        function $typename $cparams { install_super $typename $cbody }
 
         $typename.prototype = Object.create($parent.prototype);
         $($typename.prototype.$mname = function $mname $mparams 
-          { install_super $parent $mbody };) ...
+          { install_super $typename $mbody };) ...
     }
 
     rule {
@@ -119,12 +150,14 @@ let class = macro {
     }
 
     rule {
-        $typedef ... {
+        $typename $extends ... {
             $methods ...
         }
     } => {
-        class_constructor $typedef ... {
-            constructor() {}
+        class_constructor $typename $extends ... {
+            constructor() {
+                Object.getPrototypeOf($typename.prototype).constructor.call(this);
+            }
             $methods ...
         }
     }
@@ -145,58 +178,57 @@ macro class_constructor {
 }
 export class
 
-        class Foo {
-            constructor(x) {
-                this.fooX = x + 5;
-            }
+class Foo {
+    getX() {
+        return this.fooX;
+    }
+}
 
-            getX() {
-                return this.fooX;
-            }
-        }
+class Bar extends Foo {
+    constructor(x) {
+        super(x);
+        this.barX = x;
+    }
 
-        class Bar extends Foo {
-            constructor(x) {
-                super(x);
-                this.barX = x;
-            }
+    getX() {
+        return this.barX;
+    }
 
-            getX() {
-                return this.barX;
-            }
+    getFooX() {
+        return super.getX();
+    }
 
-            getFooX() {
+    nested() {
+        if(true) {
+            if(this.barX > 2) {
                 return super.getX();
             }
-
-            nested() {
-                if(true) {
-                    if(this.barX > 2) {
-                        return super.getX();
-                    }
-                }
-
-                return 1;
-            }
-
-            nestedFunction() {
-                function run() {
-                    if(true) {
-                        if(this.barX > 2) {
-                            return super.getX();
-                        }
-                    }
-                }
-
-                return run();
-            }
-
-            getMethod() {
-                return super.getX;
-            }
-
-            getMethod2() {
-                return super['getX'];
-            }
-
         }
+
+        return 1;
+    }
+
+    nestedFunction() {
+        var y = getArray();
+        var x = arr.map(function() {
+            if(true) {
+                if(this.barX > 2) {
+                    foo(function() {
+                        return super.getX();
+                    });
+                }
+            }
+        });
+
+        return run();
+    }
+
+    getMethod() {
+        return super.getX;
+    }
+
+    getMethod2() {
+        return super['getX'];
+    }
+
+}

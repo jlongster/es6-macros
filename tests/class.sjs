@@ -87,9 +87,7 @@ describe('class', function() {
             nestedFunction() {
                 function run() {
                     if(true) {
-                        if(this.barX > 2) {
-                            return super.getX();
-                        }
+                        return super.getX();
                     }
                 }
 
