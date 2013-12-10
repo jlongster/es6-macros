@@ -164,7 +164,7 @@ let class = macro {
 }
 
 // hack to recurse down into `class` (which needs to be a let macro
-// because we don't have proper modules yet
+// because we don't have proper modules yet)
 macro class_constructor {
     rule {
         $typedef ... {
