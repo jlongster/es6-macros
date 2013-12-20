@@ -1,4 +1,3 @@
-
 # es6-macros
 
 This is a collection of [sweet.js](http://sweetjs.org/) macros that
@@ -12,6 +11,7 @@ Currently implemented:
 
 TODO:
 
+* fat arrow functions
 * rest and default arguments
 * spread operator for applying arguments
 * possibly limited `for of` support
