@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 dest: 'index.sjs'
             }
         },
-        sweet_js: {
+        sweetjs: {
             options: {
                 modules: ['./index']
             },

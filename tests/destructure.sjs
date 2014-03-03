@@ -10,8 +10,8 @@ macro testWithDecl {
                 $var w = function(){};
                 $var z = x;
 
-                for($var i=0; i<5; i++) {
-                }
+                // for($var i=0; i<5; i++) {
+                // }
             });
 
             it('should basically work', function() {
@@ -24,11 +24,11 @@ macro testWithDecl {
                 expect(foo).to.be(1);
                 expect(bar).to.be(2);
 
-                $var i = 0;
-                $var arr = [0, 5];
-                for($var [i, n] = arr; i < 10; i++) {
-                    expect(n).to.be(5);
-                }
+                // $var i = 0;
+                // $var arr = [0, 5];
+                // for($var [i, n] = arr; i < 10; i++) {
+                //     expect(n).to.be(5);
+                // }
             });
 
             it('should rename', function() {
@@ -106,33 +106,33 @@ testWithDecl var "var"
 //testWithDecl let "let"
 //testWithDecl const "const"
 
-describe('destructuring', function() {
-    it('should handle function args', function() {
-        function foo(x, y, [z, w]) {
-            expect(z).to.be(5);
-            expect(w).to.be(6);
-        }
-        foo(1, 2, [5, 6]);
+// describe('destructuring', function() {
+//     it('should handle function args', function() {
+//         function foo(x, y, [z, w]) {
+//             expect(z).to.be(5);
+//             expect(w).to.be(6);
+//         }
+//         foo(1, 2, [5, 6]);
 
-        function bar(x, y, {z, w}) {
-            expect(z).to.be(5);
-            expect(w).to.be(6);
-        }
-        bar(1, 2, { z: 5, w: 6 });
+//         function bar(x, y, {z, w}) {
+//             expect(z).to.be(5);
+//             expect(w).to.be(6);
+//         }
+//         bar(1, 2, { z: 5, w: 6 });
 
-        (function({ x, y, z }, callback) {
-            expect(x).to.be(3);
-            expect(y).to.be(4);
-            expect(z).to.be(5);
-        })({ x: 3, y: 4, z: 5 });
+//         (function({ x, y, z }, callback) {
+//             expect(x).to.be(3);
+//             expect(y).to.be(4);
+//             expect(z).to.be(5);
+//         })({ x: 3, y: 4, z: 5 });
 
-        function baz(x, y, { apple = true,
-                             pear = false,
-                             peach = 'default' }) {
-            expect(apple).to.be(true);
-            expect(pear).to.be(true);
-            expect(peach).to.be('default');
-        }
-        baz(1, 2, { pear: true });
-    });
-});
+//         function baz(x, y, { apple = true,
+//                              pear = false,
+//                              peach = 'default' }) {
+//             expect(apple).to.be(true);
+//             expect(pear).to.be(true);
+//             expect(peach).to.be('default');
+//         }
+//         baz(1, 2, { pear: true });
+//     });
+// });

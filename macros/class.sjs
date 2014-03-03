@@ -8,10 +8,10 @@ macro install_super {
         var res = search(stx);
 
         if(saveThis) {
-            res = [makeKeyword('var'),
+            res = [makeKeyword('var', #{$ctx}),
                    makeIdent('self', stx[0]),
-                   makePunc('='),
-                   makeIdent('this')].concat(res);
+                   makePunc('=', #{$ctx}),
+                   makeIdent('this', #{$ctx})].concat(res);
         }
 
         return res;
@@ -60,9 +60,9 @@ macro install_super {
                         }
                         else if(n.token.value == '()') {
                             var args = n;
-                            var pre = [makeIdent(inFunction ? 'self' : 'this')];
+                            var pre = [makeIdent(inFunction ? 'self' : 'this', stx[0])];
                             if(args.token.inner.length) {
-                                pre.push(makePunc(','));
+                                pre.push(makePunc(',', #{$ctx}));
                             }
                             args.token.inner = pre.concat(args.token.inner);
 
@@ -87,9 +87,9 @@ macro install_super {
                            args.token.value == '()') {
                             
                             // prepend `this` to the arguments
-                            var pre = [makeIdent(inFunction? 'self' : 'this')];
+                            var pre = [makeIdent(inFunction? 'self' : 'this', stx[0])];
                             if(args.token.inner.length) {
-                                pre.push(makePunc(','));
+                                pre.push(makePunc(',', #{$ctx}));
                             }
                             args.token.inner = pre.concat(args.token.inner);
 

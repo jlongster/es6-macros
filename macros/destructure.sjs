@@ -1,194 +1,122 @@
 
-// TODO: force "inside-out" expansion?
-
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
 macro destruct_objassign {
-    rule { ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
-        destruct_next ($obj.$prop || $default) $pattern
-    }
+  rule { $decl ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
+    destruct_next $decl ($obj.$prop || $default) $pattern
+  }
 
-    rule { ($name:ident = $default:expr) $obj:expr } => {
-        destruct_next ($obj.$name || $default) $name
-    }
+  rule { $decl ($name:ident = $default:expr) $obj:expr } => {
+    destruct_next $decl ($obj.$name || $default) $name
+  }
 
-    rule { ($prop:ident : $pattern:expr) $obj:expr } => {
-        destruct_next ($obj.$prop) $pattern
-    }
+  rule { $decl ($prop:ident : $pattern:expr) $obj:expr } => {
+    destruct_next $decl ($obj.$prop) $pattern
+  }
 
-    rule { ($name:ident) $obj:expr } => {
-        destruct_next ($obj.$name) $name
-    }
+  rule { $decl ($name:ident) $obj:expr } => {
+    destruct_next $decl ($obj.$name) $name
+  }
 
-    rule { () $obj:expr } => {
-        _noop
-    }
+  rule { $decl () $obj:expr } => {
+  }
 }
 
 macro destruct_arrassign {
-    rule { ($pattern:expr = $default:expr) $arr $index } => {
-        destruct_next ($arr[$index++] || $default) $pattern
-    }
+  rule { $decl ($id = $default:expr) $arr $index } => {
+    destruct_next $decl ($arr[$index++] || $default) $id
+  }
 
-    rule { (.. $name:ident) $arr $index } => {
-        destruct_next ($arr.slice($index)) $name
-    }
+  rule { $decl (.. $name:ident) $arr $index } => {
+    destruct_next $decl ($arr.slice($index)) $name
+  }
 
-    rule { ($pattern:expr) $arr $index } => {
-        destruct_next ($arr[$index++]) $pattern
-    }
+  rule { $decl ($pattern:expr) $arr $index } => {
+    destruct_next $decl ($arr[$index++]) $pattern
+  }
 
-    rule { () $arr $index } => {
-        _noop
-    }
+  rule { $decl () $arr $index } => {
+  }
 }
 
 macro destruct_finish {
-    rule { { $pattern (,) ... } $obj:expr } => {
-        obj = $obj, $(destruct_objassign $pattern obj) (,) ...
-    }
+  rule { $decl { $pattern (,) ... } $obj:expr } => {
+    $decl obj = $obj;
+    $(destruct_objassign $decl $pattern obj) (;) ...
+  }
 
-    rule { [ $pattern (,) ... ] $arr:expr } => {
-        arr = $arr, i=0, $(destruct_arrassign $pattern arr i) (,) ...
-    }
+  rule { $decl [ $pattern (,) ... ] $arr:expr } => {
+    $decl arr = $arr;
+    $decl i=0;
+    $(destruct_arrassign $decl $pattern arr i) (;) ...
+  }
 
-    rule { $id $val:expr } => {
-        $id = $val
-    }
+  rule { $decl $id $val:expr } => {
+    $decl $id = $val
+  }
 }
 
 macro destruct_next {
-    // wrap all fields in parentheses
+  // wrap all fields in parentheses
 
-    rule { $a $b ($acc ...), $prop:ident : $pattern:expr = $val:expr } => {
-        destruct_next $a $b ($acc ... , ($prop: $pattern = $val))
-    }
+  rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr = $val:expr } => {
+    destruct_next $a $b $c ($acc ... , ($prop: $pattern = $val))
+  }
 
-    rule { $a $b ($acc ...), $prop:ident : $pattern:expr } => {
-        destruct_next $a $b ($acc ... , ($prop: $pattern))
-    }
+  rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr } => {
+    destruct_next $a $b $c ($acc ... , ($prop: $pattern))
+  }
 
-    rule { $a $b ($acc ...), $name:ident = $val:expr } => {
-        destruct_next $a $b ($acc ... , ($name = $val))
-    }
+  rule { $a $b $c ($acc ...), $name:ident = $val:expr } => {
+    destruct_next $a $b $c ($acc ... , ($name = $val))
+  }
 
-    rule { $a $b ($acc ...), $pattern:expr } => {
-        destruct_next $a $b ($acc ... , ($pattern))
-    }
+  rule { $a $b $c ($acc ...), $pattern:expr } => {
+    destruct_next $a $b $c ($acc ... , ($pattern))
+  }
 
-    rule { $a $b ($acc ...), .. $name:ident} => {
-        destruct_next $a $b ($acc ... , (.. $name))
-    }
+  rule { $a $b $c ($acc ...), .. $name:ident} => {
+    destruct_next $a $b $c ($acc ... , (.. $name))
+  }
 
-    rule { $a $b ($acc ...), } => {
-        destruct_next $a $b ($acc ... , (_noop))
-    }
+  rule { $a $b $c ($acc ...), } => {
+    destruct_next $a $b $c ($acc ... , (_noop))
+  }
 
-    // pass along normalized object
+  // pass along normalized object
 
-    rule { ($obj:expr) {} ($acc ...) } => {
-        destruct_finish { $acc ... } $obj
-    }
+  rule { $decl ($obj:expr) {} ($acc ...) } => {
+    destruct_finish $decl { $acc ... } $obj
+  }
+  
+  rule { $decl ($obj:expr) [] ($acc ...) } => {
+    destruct_finish $decl [ $acc ... ] $obj
+  }
 
-    rule { ($obj:expr) [] ($acc ...) } => {
-        destruct_finish [ $acc ... ] $obj
-    }
+  // strip out fields
 
-    // strip out fields
+  rule { $decl $o { $field ... } } => {
+    destruct_next $decl $o {} (()), $field ...
+  }
 
-    rule { $o { $field ... } } => {
-        destruct_next $o {} (()), $field ...
-    }
+  rule { $decl $o [ $field ... ] } => {
+    destruct_next $decl $o [] (()), $field ...
+  }
 
-    rule { $o [ $field ... ] } => {
-        destruct_next $o [] (()), $field ...
-    }
+  // pass normal expr along
 
-    // pass normal expr along
-
-    rule { ($obj:expr) $var:expr } => {
-        destruct_finish $var $obj
-    }
+  rule { $decl ($obj:expr) $var:expr } => {
+      destruct_finish $decl $var $obj
+  }
 }
 
 let var = macro {
-    rule { $var:expr = $obj:expr } => {
-        var destruct_next ($obj) $var
-    }
+  rule { $pattern:expr = $obj:expr } => {
+    destruct_next var ($obj) $pattern
+  }
 
-    rule { $id:ident } => {
-        var $id
-    }
+  rule { $id:ident } => {
+    var $id
+  }
 }
 export var
-
-// sweet.js doesn't support let and const yet, but it should come very soon.
-
-// let let = macro {
-//     rule { $id = macro { $body ... } } => {
-//         let $id = macro { $body ... }
-//     }
-
-//     rule { $var:expr = $obj:expr } => {
-//         let destruct_next ($obj) $var
-//     }
-
-//     rule { $id } => {
-//         let $id
-//     }
-// }
-// export let
-
-// let const = macro {
-//     rule { $var:expr = $obj:expr } => {
-//         const destruct_next ($obj) $var
-//     }
-
-//     rule { $id } => {
-//         const $id
-//     }
-// }
-// export const
-
-// apply destructuring on functions arguments too
-
-macro parse_arg {
-    rule { ($args ...) ($acc ...) $body ([ $pattern ... ] $expr ...)} => {
-        parse_arg ($args ... _tmp) ($acc ... var [$pattern ...] = _tmp;) $body ($expr ...)
-    }
-
-    rule { ($args ...) ($acc ...) $body ({ $pattern ... } $expr ...)} => {
-        parse_arg ($args ... _tmp) ($acc ... var { $pattern ... } = _tmp;) $body ($expr ...)
-    }
-
-    rule { ($args ...) ($acc ...) $body (, $expr ...) } => {
-        parse_arg ($args ... ,) ($acc ...) $body ($expr ...)
-    }
-
-    rule { ($args ...) ($acc ...) $body ($param $expr ...) } => {
-        parse_arg ($args ... $param) ($acc ...) $body ($expr ...)
-    }
-
-    rule { $args ($acc ...) { $expr ... } () } => {
-        $args {
-            $acc ...
-            $expr ...
-        }
-    }
-
-    // rule { $expr ... } => {
-    //     _debug $expr ...
-    // }
-}
-
-let function = macro {
-    rule { $id:ident ($param (,) ...) $body } => {
-        function $id parse_arg () () $body ($param (,) ...)
-    }
-
-    rule { ($param (,) ...) $body } => {
-        function parse_arg () () $body ($param (,) ...)
-    }
-
-}
-export function

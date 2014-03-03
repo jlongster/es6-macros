@@ -1,5 +1,5 @@
 
 test: 
 	grunt
-	grunt sweet_js
+	grunt sweetjs
 	mocha --harmony -b -R tap tests

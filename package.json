@@ -1,7 +1,7 @@
 {
   "name": "es6-macros",
   "description": "A collection of sweet.js macros that implement ES6 features for ES5",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "James Long <longster@gmail.com>",
   "engines": {
     "node": "*"
@@ -23,5 +23,6 @@
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-concat": "~0.3.0"
-  }
+  },
+  "tags": ["sweet-macros"]
 }
