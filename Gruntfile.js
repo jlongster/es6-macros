@@ -5,7 +5,7 @@ module.exports = function(grunt) {
             dist: {
                 src: ['macros/util.sjs',
                       'macros/class.sjs',
-
+                      'macros/fat-arrow.sjs',
                       // destructure must come last, so that `var` in
                       // any case macros is not overriden (those have
                       // special syntax)
@@ -15,14 +15,14 @@ module.exports = function(grunt) {
         },
         sweetjs: {
             options: {
-                modules: ['./index']
+                modules: ['./index.sjs']
             },
             tests: {
                 src: 'tests/**/*.sjs'
             }
         }
     });
-    
+
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-sweet.js');
     grunt.registerTask('default', ['concat']);

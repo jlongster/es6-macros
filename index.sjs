@@ -203,6 +203,26 @@ macro class_constructor {
 }
 export class
 
+macro => {
+  rule infix { ($value (,) ...) | {$body ...} } => {
+    function($value (,) ...) {
+      $body ...
+    }.bind(this)
+  }
+  rule infix { ($value (,) ...) | $guard:expr } => {
+    function($value (,) ...) {
+      return $guard;
+    }.bind(this)
+  }
+  rule infix { $param:ident | $guard:expr } => {
+    function($param) {
+      return $guard;
+    }
+  }
+}
+
+export =>
+
 
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
