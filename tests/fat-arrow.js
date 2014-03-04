@@ -40,16 +40,19 @@ describe('fat arrow', function () {
     it('should bind this correctly', function () {
         var obj$1150 = {
                 id: 1,
-                getId: function () {
-                    return this.id;
-                }.bind(this)
+                init: function () {
+                    var id$1155 = function () {
+                            return this.id;
+                        }.bind(this);
+                    return id$1155();
+                }
             };
-        expect$1125(obj$1150.getId()).to.be(1);
+        expect$1125(obj$1150.init()).to.be(1);
     });
     it('should implicitly return object', function () {
-        var obj$1156 = function (id$1157) {
-            return { id: id$1157 };
+        var obj$1160 = function (id$1161) {
+            return { id: id$1161 };
         };
-        expect$1125(obj$1156(1)).to.be({ id: 1 });
+        expect$1125(obj$1160(1)).to.eql({ id: 1 });
     });
 });

@@ -30,13 +30,16 @@ describe('fat arrow', function() {
     it('should bind this correctly', function() {
         var obj = {
             id: 1,
-            getId: () => this.id
+            init: function() {
+                var id = () => this.id;
+                return id();
+            }
         };
-        expect(obj.getId()).to.be(1);
+        expect(obj.init()).to.be(1);
     });
 
     it('should implicitly return object', function() {
         var obj = id => ({ id: id });
-        expect(obj(1)).to.be({id: 1});
+        expect(obj(1)).to.eql({id: 1});
     });
 });
