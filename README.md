@@ -6,12 +6,12 @@ ES5 JavaScript, which can be used today everywhere.
 
 Currently implemented:
 
-* destructuring (including elision, rest, and function args)
+* destructuring (including elision and rest)
 * classes
+* fat arrow functions
 
 TODO:
 
-* fat arrow functions
 * rest and default arguments
 * spread operator for applying arguments
 * possibly limited `for of` support
