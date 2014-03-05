@@ -111,11 +111,11 @@ macro destruct_next {
 }
 
 let var = macro {
-  rule { $pattern:expr = $obj:expr } => {
+  rule { $pattern = $obj:expr } => {
     destruct_next var ($obj) $pattern
   }
 
-  rule { $id:ident } => {
+  rule { $id } => {
     var $id
   }
 }
