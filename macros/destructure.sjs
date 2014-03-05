@@ -41,13 +41,13 @@ macro destruct_arrassign {
 
 macro destruct_finish {
   rule { $decl { $pattern (,) ... } $obj:expr } => {
-    $decl obj = $obj;
+    var obj = $obj;
     $(destruct_objassign $decl $pattern obj) (;) ...
   }
 
   rule { $decl [ $pattern (,) ... ] $arr:expr } => {
-    $decl arr = $arr;
-    $decl i=0;
+    var arr = $arr;
+    var i=0;
     $(destruct_arrassign $decl $pattern arr i) (;) ...
   }
 
@@ -120,3 +120,25 @@ let var = macro {
   }
 }
 export var
+
+let let = macro {
+  rule { $pattern = $obj:expr } => {
+    destruct_next let ($obj) $pattern
+  }
+
+  rule { $id } => {
+    let $id
+  }
+}
+export let
+
+let const = macro {
+  rule { $pattern = $obj:expr } => {
+    destruct_next const ($obj) $pattern
+  }
+
+  rule { $id } => {
+    const $id
+  }
+}
+export const

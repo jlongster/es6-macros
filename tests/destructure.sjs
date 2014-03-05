@@ -5,10 +5,8 @@ macro testWithDecl {
     rule { $var $name } => {
         describe('destructuring ' + $name + ' keyword', function() {
             it('should handle normal declarations', function() {
-                $var x;
                 $var y = 5;
                 $var w = function(){};
-                $var z = x;
 
                 // for($var i=0; i<5; i++) {
                 // }
@@ -101,10 +99,8 @@ macro testWithDecl {
 }
 
 testWithDecl var "var"
-
-// no let or const until sweet.js handles them, very soon
-//testWithDecl let "let"
-//testWithDecl const "const"
+testWithDecl let "let"
+testWithDecl const "const"
 
 // describe('destructuring', function() {
 //     it('should handle function args', function() {
