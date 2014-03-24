@@ -37,3 +37,12 @@ issues): `$ npm install https://github.com/mozilla/sweet.js.git`
 We are working on a [grunt
 task](https://github.com/jlongster/grunt-sweet.js) to make this
 easier.
+
+## Contributing
+
+To run the tests:
+
+```bash
+npm install
+make
+```

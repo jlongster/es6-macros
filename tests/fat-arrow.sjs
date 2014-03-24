@@ -27,15 +27,39 @@ describe('fat arrow', function() {
         expect(squared[2]).to.be(undefined);
     });
 
-    it('should bind this correctly', function() {
+    it('should bind this for infix 0 arguments', function() {
         var obj = {
             id: 1,
-            init: function() {
-                var id = () => this.id;
-                return id();
+            getter: function() {
+                var f = () => this.id;
+                return f();
             }
         };
-        expect(obj.init()).to.be(1);
+        expect(obj.getter()).to.be(1);
+    });
+
+    it('should bind this for infix 1 arguments', function() {
+        var obj = {
+            id: 1,
+            adder: function(x) {
+                var f = x => this.id + x;
+                return f(x)
+            }
+        };
+        expect(obj.adder(5)).to.be(6);
+    });
+
+    it('should bind this for block syntax', function() {
+        var obj = {
+            id: 1,
+            subtractor: function(x) {
+                var f = (x) => {
+                    return this.id - x;
+                }
+                return f(x)
+            }
+        };
+        expect(obj.subtractor(5)).to.be(-4);
     });
 
     it('should implicitly return object', function() {
