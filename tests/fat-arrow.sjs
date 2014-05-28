@@ -66,4 +66,15 @@ describe('fat arrow', function() {
         var obj = id => ({ id: id });
         expect(obj(1)).to.eql({id: 1});
     });
+
+    it('should interpret `arguments` as belonging to containing function', function() {
+        var obj = {
+            id: 1,
+            subtractor: function() {
+                var f = () => this.id - arguments[0];
+                return f();
+            }
+        };
+        expect(obj.subtractor(5)).to.be(-4);
+    });
 });
