@@ -4,6 +4,8 @@ This is a collection of [sweet.js](http://sweetjs.org/) macros that
 implement syntactic ES6 features that can be easily compiled out to
 ES5 JavaScript, which can be used today everywhere.
 
+**Warning**: This is still in development and most of these features are not completely compliant with ES6 yet. I wouldn't recommend using it for production code yet.
+
 Currently implemented:
 
 * destructuring (including elision and rest)
