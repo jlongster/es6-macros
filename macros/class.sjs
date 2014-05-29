@@ -156,7 +156,7 @@ let class = macro {
     } => {
         class_constructor $typename $extends ... {
             constructor() {
-                Object.getPrototypeOf($typename.prototype).constructor.call(this);
+                Object.getPrototypeOf($typename.prototype).constructor.apply(this, arguments);
             }
             $methods ...
         }
