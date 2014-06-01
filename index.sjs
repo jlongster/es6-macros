@@ -181,7 +181,7 @@ let class = macro {
     } => {
         class_constructor $typename $extends ... {
             constructor() {
-                Object.getPrototypeOf($typename.prototype).constructor.call(this);
+                Object.getPrototypeOf($typename.prototype).constructor.apply(this, arguments);
             }
             $methods ...
         }
@@ -209,8 +209,18 @@ macro => {
       $body ...
     }.bind(this)
   }
+  rule infix { ($value (,) ... $[...] $rest) | {$body ...} } => {
+    function($value (,) ..., $[...]$rest) {
+      $body ...
+    }.bind(this)
+  }
   rule infix { ($value (,) ...) | $guard:expr } => {
     function($value (,) ...) {
+      return $guard;
+    }.bind(this)
+  }
+  rule infix { ($value (,) ... $[...] $rest) | $guard:expr } => {
+    function($value (,) ..., $[...]$rest) {
       return $guard;
     }.bind(this)
   }
@@ -222,6 +232,35 @@ macro => {
 }
 
 export =>
+
+let function = macro {
+  rule { ($arg:ident (,) ... $[...] $rest:ident) { $body ... } } => { 
+    rest ($arg (,) ...) $rest { $body ... }
+  }
+  rule { $name:ident ($arg:ident (,) ... $[...] $rest:ident) { $body ... } } => { 
+    rest $name($arg (,) ...) $rest { $body ... }
+  }
+  // Passthrough
+  rule { $pass ... } => { function $pass ... }
+}
+
+macro rest {
+  case {_ $name:ident... ($arg:ident (,) ... ) $rest:ident { $body ... } } => { 
+  	var args = (#{ $arg ... }).length,
+	stx = #{$rest};
+	letstx $l = args ?
+	  [makePunc(',', stx), makeValue(args, stx)] :
+	  null;
+	return #{
+	  function $name...( $arg (,) ... , $rest ) {
+		$rest = Array.prototype.slice.call(arguments $l);
+		$body ...
+	  }
+	}
+  }
+}
+
+export function
 
 
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
