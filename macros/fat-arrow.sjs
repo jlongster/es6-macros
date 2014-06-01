@@ -4,8 +4,18 @@ macro => {
       $body ...
     }.bind(this)
   }
+  rule infix { ($value (,) ... $[...] $rest) | {$body ...} } => {
+    function($value (,) ..., $[...]$rest) {
+      $body ...
+    }.bind(this)
+  }
   rule infix { ($value (,) ...) | $guard:expr } => {
     function($value (,) ...) {
+      return $guard;
+    }.bind(this)
+  }
+  rule infix { ($value (,) ... $[...] $rest) | $guard:expr } => {
+    function($value (,) ..., $[...]$rest) {
       return $guard;
     }.bind(this)
   }
