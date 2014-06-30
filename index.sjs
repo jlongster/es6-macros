@@ -181,7 +181,7 @@ let class = macro {
     } => {
         class_constructor $typename $extends ... {
             constructor() {
-                Object.getPrototypeOf($typename.prototype).constructor.call(this);
+                Object.getPrototypeOf($typename.prototype).constructor.apply(this, arguments);
             }
             $methods ...
         }
@@ -227,7 +227,7 @@ export =>
 // http://people.mozilla.org/~jorendorff/es6-draft.html#sec-destructuring-assignment
 
 macro destruct_objassign {
-  rule { $decl ($prop:ident : $pattern:expr = $default:expr) $obj:expr } => {
+  rule { $decl ($prop:ident : $pattern = $default:expr) $obj:expr } => {
     destruct_next $decl ($obj.$prop || $default) $pattern
   }
 
@@ -235,7 +235,7 @@ macro destruct_objassign {
     destruct_next $decl ($obj.$name || $default) $name
   }
 
-  rule { $decl ($prop:ident : $pattern:expr) $obj:expr } => {
+  rule { $decl ($prop:ident : $pattern) $obj:expr } => {
     destruct_next $decl ($obj.$prop) $pattern
   }
 
@@ -256,7 +256,7 @@ macro destruct_arrassign {
     destruct_next $decl ($arr.slice($index)) $name
   }
 
-  rule { $decl ($pattern:expr) $arr $index } => {
+  rule { $decl ($pattern) $arr $index } => {
     destruct_next $decl ($arr[$index++]) $pattern
   }
 
@@ -284,11 +284,11 @@ macro destruct_finish {
 macro destruct_next {
   // wrap all fields in parentheses
 
-  rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr = $val:expr } => {
+  rule { $a $b $c ($acc ...), $prop:ident : $pattern = $val:expr } => {
     destruct_next $a $b $c ($acc ... , ($prop: $pattern = $val))
   }
 
-  rule { $a $b $c ($acc ...), $prop:ident : $pattern:expr } => {
+  rule { $a $b $c ($acc ...), $prop:ident : $pattern } => {
     destruct_next $a $b $c ($acc ... , ($prop: $pattern))
   }
 
@@ -296,12 +296,16 @@ macro destruct_next {
     destruct_next $a $b $c ($acc ... , ($name = $val))
   }
 
-  rule { $a $b $c ($acc ...), $pattern:expr } => {
-    destruct_next $a $b $c ($acc ... , ($pattern))
+  rule { $a $b $c ($acc ...), , } => {
+    destruct_next $a $b $c ($acc ... , (_noop)),
   }
 
   rule { $a $b $c ($acc ...), .. $name:ident} => {
     destruct_next $a $b $c ($acc ... , (.. $name))
+  }
+
+  rule { $a $b $c ($acc ...), $pattern } => {
+    destruct_next $a $b $c ($acc ... , ($pattern))
   }
 
   rule { $a $b $c ($acc ...), } => {
@@ -313,7 +317,7 @@ macro destruct_next {
   rule { $decl ($obj:expr) {} ($acc ...) } => {
     destruct_finish $decl { $acc ... } $obj
   }
-  
+
   rule { $decl ($obj:expr) [] ($acc ...) } => {
     destruct_finish $decl [ $acc ... ] $obj
   }
@@ -330,7 +334,7 @@ macro destruct_next {
 
   // pass normal expr along
 
-  rule { $decl ($obj:expr) $var:expr } => {
+  rule { $decl ($obj:expr) $var } => {
       destruct_finish $decl $var $obj
   }
 }
