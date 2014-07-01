@@ -212,7 +212,7 @@ macro disable_arguments {
         var s = stx[i];
         if(s.token.type === parser.Token.Identifier &&
            s.token.value === 'arguments') {
-          throwSyntaxError('=>', 'cannot access arguments', s);
+          throwSyntaxError('=>', 'arguments unavailable with => macro', s);
         }
         else if(s.token.type === parser.Token.Delimiter) {
           walk(s.token.inner);
