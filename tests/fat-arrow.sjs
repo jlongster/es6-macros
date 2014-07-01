@@ -94,5 +94,19 @@ describe('fat arrow', function() {
       }
     };
     expect(obj.subtractor(5)).to.be(-4);
-  });
+
+    function func() {
+      var f = () => function(x) {
+        return arguments[0];
+      }
+      return f()(1);
+    }
+    expect(func()).to.be(1);
+
+    var foo = () => function() {
+      var bar = { arguments: 5 };
+      return bar.arguments;
+    }
+    expect(foo()()).to.be(5);
+});
 });
