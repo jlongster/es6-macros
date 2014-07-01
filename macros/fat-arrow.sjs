@@ -2,16 +2,22 @@ macro bind_args {
   case { $ctx $args $body ... } => {
     var stx = #{ $body ... };
     var args = #{ $args };
-    
+
     function walk(stx) {
       for(var i=0; i<stx.length; i++) {
         var s = stx[i];
-        if(s.token.type === parser.Token.Identifier &&
-           s.token.value === 'arguments') {
-          stx[i] = args[0];
-        }
-        else if(s.token.type === parser.Token.Delimiter) {
+        if(s.token.type === parser.Token.Delimiter) {
           walk(s.token.inner);
+        }
+        else if(s.token.value === 'function') {
+          var expr = getExpr(stx.slice(i));
+          walk(expr.rest);
+          break;
+        }
+        else if(s.token.type === parser.Token.Identifier &&
+                s.token.value === 'arguments' &&
+                (i === 0 || stx[i-1].token.value !== '.')) {
+          s.token.value = '__fa_args';
         }
       }
     }
@@ -57,3 +63,11 @@ macro => {
 }
 
 export =>
+
+var obj = {
+  id: 1,
+  subtractor: function() {
+    var f = () => function() {this.id - arguments[0];}
+    return f();
+  }
+};
