@@ -1,13 +1,14 @@
-macro disable_arguments {
-  case { $ctx $body ... } => {
+macro bind_args {
+  case { $ctx $args $body ... } => {
     var stx = #{ $body ... };
-
+    var args = #{ $args };
+    
     function walk(stx) {
       for(var i=0; i<stx.length; i++) {
         var s = stx[i];
         if(s.token.type === parser.Token.Identifier &&
            s.token.value === 'arguments') {
-          throwSyntaxError('=>', 'arguments unavailable with => macro', s);
+          stx[i] = args[0];
         }
         else if(s.token.type === parser.Token.Delimiter) {
           walk(s.token.inner);
@@ -21,25 +22,37 @@ macro disable_arguments {
 }
 
 macro => {
-  rule infix { ($arg (,) ...) | {$body ...} } => {
-    function($arg (,) ...) {
-      disable_arguments $body ...
-    }.bind(this)
+  case infix { ($arg (,) ...) | $ctx {$body ...} } => {
+    letstx $args = [makeIdent('__fa_args', #{$ctx})];
+    return #{
+      function($args, $arg (,) ...) {
+        bind_args $args $body ...
+      }.bind(this, arguments)
+    }
   }
-  rule infix { $arg:ident | {$body ...} } => {
-    function($arg) {
-      disable_arguments $body ...
-    }.bind(this)
+  case infix { $arg:ident | $ctx {$body ...} } => {
+    letstx $args = [makeIdent('__fa_args', #{$ctx})];
+    return #{
+      function($args, $arg) {
+        bind_args $args $body ...
+      }.bind(this, arguments)
+    }
   }
-  rule infix { ($arg (,) ...) | $guard:expr } => {
-    function($arg (,) ...) {
-      return disable_arguments $guard;
-    }.bind(this)
+  case infix { ($arg (,) ...) | $ctx $guard:expr } => {
+    letstx $args = [makeIdent('__fa_args', #{$ctx})];
+    return #{
+      function ($args, $arg (,) ...) {
+        return bind_args $args $guard;
+      }.bind(this, arguments)
+    }
   }
-  rule infix { $arg:ident | $guard:expr } => {
-    function($arg) {
-      return disable_arguments $guard;
-    }.bind(this)
+  case infix { $arg:ident | $ctx $guard:expr } => {
+    letstx $args = [makeIdent('__fa_args', #{$ctx})];
+    return #{
+      function($args, $arg) {
+        return bind_args $args $guard;
+      }.bind(this, arguments)
+    }
   }
 }
 
