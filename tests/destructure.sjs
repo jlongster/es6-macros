@@ -84,12 +84,12 @@ macro testWithDecl {
                 // 2 dots instead of 3 until this bug is fixed: 
                 // https://github.com/mozilla/sweet.js/issues/142
 
-                $var [one, two, ..rest] = [1, 2, 3, 4];
+                $var [one, two, $[...] rest] = [1, 2, 3, 4];
                 expect(rest.length).to.be(2);
                 expect(rest[0]).to.be(3);
                 expect(rest[1]).to.be(4);
 
-                $var [,, ..rest2] = [1, 2, 3, 4];
+                $var [,, $[...] rest2] = [1, 2, 3, 4];
                 expect(rest2.length).to.be(2);
                 expect(rest2[0]).to.be(3);
                 expect(rest2[1]).to.be(4);
@@ -100,7 +100,7 @@ macro testWithDecl {
 
 testWithDecl var "var"
 testWithDecl let "let"
-// testWithDecl const "const"
+testWithDecl const "const"
 
 // describe('destructuring', function() {
 //     it('should handle function args', function() {
