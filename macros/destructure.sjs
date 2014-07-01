@@ -22,23 +22,20 @@ macro obj_destructor {
   rule { $key:ident } => { (obj_id $key $key) }
 }
 
+macroclass succ {
+  pattern {
+    rule { $cur:lit }
+    with $next = [makeValue(unwrapSyntax(#{$cur}) + 1, #{$cur})];
+  }
+}
+
 macro count_array {
-  case { $ctx () $k $o } => {
-    return [];
+  rule { () $i $k $o } => {
   }
 
-  case { $ctx reset $arr $k $o } => {
-    global.counter = 0;
-    return #{ count_array $arr $k $o };
-  }
-
-
-  case { $ctx ($item $arr ...) $k $o } => {
-    letstx $i = [makeValue(global.counter++, #{$ctx})];
-    return #{
-      destruct $item $i $k $o
-      count_array ($arr ...) $k $o
-    };
+  rule { ($item $arr ...) $i:succ $k $o } => {
+    destruct $item $i$cur $k $o
+    count_array ($arr ...) $i$next $k $o
   }
 }
 
@@ -48,7 +45,7 @@ macro destruct {
   rule { (obj_id $key $id $default) $k $o } => { $k $id = $o.$key != null ? $o.$key : $default; }
   rule { (obj_id $key $id) $k $o } => { $k $id = $o.$key; }
   rule { (obj_sub $key $p) $k $o } => { $k __o = $o.$key; destruct $p $k __o }
-  rule { (arr $arr ...) $k $o } => { count_array reset ($arr ...) $k $o }
+  rule { (arr $arr ...) $k $o } => { count_array ($arr ...) 0 $k $o }
   rule { (arr_id $id $default) $i $k $o } => { $k $id = $o[$i] != null ? $o[$i] : $default; }
   rule { (arr_id $id) $i $k $o } => { $k $id = $o[$i]; }
   rule { (arr_sub $p) $i $k $o } => { $k __a = $o[$i]; destruct $p $k __a }
@@ -80,4 +77,5 @@ let let = macro {
 }
 export let;
 
+var [one,two,three] = arr;
 var [one,two,three] = arr;
