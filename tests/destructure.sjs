@@ -100,7 +100,7 @@ macro testWithDecl {
 
 testWithDecl var "var"
 testWithDecl let "let"
-testWithDecl const "const"
+// testWithDecl const "const"
 
 // describe('destructuring', function() {
 //     it('should handle function args', function() {
