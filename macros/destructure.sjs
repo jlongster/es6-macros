@@ -76,6 +76,3 @@ let let = macro {
   }
 }
 export let;
-
-var [one,two,three] = arr;
-var [one,two,three] = arr;
