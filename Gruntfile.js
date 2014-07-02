@@ -10,12 +10,12 @@ module.exports = function(grunt) {
                       // any case macros is not overriden (those have
                       // special syntax)
                       'macros/destructure.sjs'],
-                dest: 'index.sjs'
+                dest: 'index.js'
             }
         },
         sweetjs: {
             options: {
-                modules: ['./index.sjs']
+                modules: ['./index.js']
             },
             tests: {
                 src: 'tests/**/*.sjs'
