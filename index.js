@@ -238,7 +238,7 @@ macro => {
     return #{
       function($args, $arg (,) ...) {
         bind_args $args $body ...
-      }.bind(this, typeof arguments != undefined ? arguments : undefined)
+      }.bind(this, typeof arguments != "undefined" ? arguments : undefined)
     }
   }
   case infix { $arg:ident | $ctx {$body ...} } => {
@@ -246,7 +246,7 @@ macro => {
     return #{
       function($args, $arg) {
         bind_args $args $body ...
-      }.bind(this, typeof arguments != undefined ? arguments : undefined)
+      }.bind(this, typeof arguments != "undefined" ? arguments : undefined)
     }
   }
   case infix { ($arg (,) ...) | $ctx $guard:expr } => {
@@ -254,7 +254,7 @@ macro => {
     return #{
       function ($args, $arg (,) ...) {
         return bind_args $args $guard;
-      }.bind(this, typeof arguments != undefined ? arguments : undefined)
+      }.bind(this, typeof arguments != "undefined" ? arguments : undefined)
     }
   }
   case infix { $arg:ident | $ctx $guard:expr } => {
@@ -262,7 +262,7 @@ macro => {
     return #{
       function($args, $arg) {
         return bind_args $args $guard;
-      }.bind(this, typeof arguments != undefined ? arguments : undefined)
+      }.bind(this, typeof arguments != "undefined" ? arguments : undefined)
     }
   }
 }

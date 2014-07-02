@@ -1,7 +1,7 @@
 {
   "name": "es6-macros",
   "description": "A collection of sweet.js macros that implement ES6 features for ES5",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "author": "James Long <longster@gmail.com>",
   "engines": {
     "node": "*"
