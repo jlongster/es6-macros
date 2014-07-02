@@ -28,17 +28,11 @@ $ npm install sweet.js es6-macros
 Write your improved ES6 JavaScript, and compile it:
 
 ```
-$ sjs -c -m es6-macros -o <file>.js <file>.sjs
+$ sjs -m es6-macros file.js
 ```
 
-The `-c` parameter will generate a sourcemap so you get good debugging
-too! For the above to work right now, I think you need to use the
-master version of sweet.js (because it fixes some module importing
-issues): `$ npm install https://github.com/mozilla/sweet.js.git`
-
-We are working on a [grunt
-task](https://github.com/jlongster/grunt-sweet.js) to make this
-easier.
+If you pass `-c` to sjs along with `-o output.js`, it will generate a
+sourcemap so you get good debugging too!
 
 ## Contributing
 
