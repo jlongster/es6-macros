@@ -238,7 +238,7 @@ macro => {
     return #{
       function($args, $arg (,) ...) {
         bind_args $args $body ...
-      }.bind(this, arguments)
+      }.bind(this, typeof arguments != undefined ? arguments : undefined)
     }
   }
   case infix { $arg:ident | $ctx {$body ...} } => {
@@ -246,7 +246,7 @@ macro => {
     return #{
       function($args, $arg) {
         bind_args $args $body ...
-      }.bind(this, arguments)
+      }.bind(this, typeof arguments != undefined ? arguments : undefined)
     }
   }
   case infix { ($arg (,) ...) | $ctx $guard:expr } => {
@@ -254,7 +254,7 @@ macro => {
     return #{
       function ($args, $arg (,) ...) {
         return bind_args $args $guard;
-      }.bind(this, arguments)
+      }.bind(this, typeof arguments != undefined ? arguments : undefined)
     }
   }
   case infix { $arg:ident | $ctx $guard:expr } => {
@@ -262,20 +262,12 @@ macro => {
     return #{
       function($args, $arg) {
         return bind_args $args $guard;
-      }.bind(this, arguments)
+      }.bind(this, typeof arguments != undefined ? arguments : undefined)
     }
   }
 }
 
 export =>
-
-var obj = {
-  id: 1,
-  subtractor: function() {
-    var f = () => function() {this.id - arguments[0];}
-    return f();
-  }
-};
 
 macro destructor {
   rule { [ $arr:arr_destructor (,) ... ] } => { (arr $arr ...) }
