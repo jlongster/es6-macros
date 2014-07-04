@@ -325,6 +325,10 @@ macro destruct {
 }
 
 let var = macro {
+  rule { $id:ident } => {
+    var $id
+  }
+
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
     destruct $pattern var __ref
@@ -333,6 +337,10 @@ let var = macro {
 export var;
 
 let const = macro {
+  rule { $id:ident } => {
+    var $id
+  }
+
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
     destruct $pattern const __ref
@@ -341,6 +349,10 @@ let const = macro {
 export const;
 
 let let = macro {
+  rule { $id:ident } => {
+    var $id
+  }
+
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
     destruct $pattern let __ref
