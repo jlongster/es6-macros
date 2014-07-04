@@ -124,29 +124,76 @@ macro install_super {
     }
 }
 
+macro methods {
+    rule {
+        extended_method $typename instance $mname $mparams $mbody
+    } => {
+        $typename.prototype.$mname = function $mname $mparams 
+          { install_super $typename $mbody };
+    }
+    rule {
+        extended_method $typename constructor $mname $mparams $mbody
+    } => {
+        $typename.$mname = function $mname $mparams 
+          { install_super $typename $mbody };
+    }
+    rule {
+        $typename instance $name $params $body
+    } => {
+        $typename.prototype.$name = function $name $params $body;
+    }
+    rule {
+        $typename constructor $name $params $body
+    } => {
+        $typename.$name = function $name $params $body;
+    }
+}
+
+macroclass method {
+  pattern {
+      rule {
+          static $name $params $body
+      }
+      with $base = #{ "constructor" }
+  }
+  pattern {
+      rule {
+          $name $params $body
+      }
+      with $base = #{ "instance" }
+  }
+}
+
 let class = macro {
     rule {
         $typename extends $parent {
             constructor $cparams $cbody
-            $($mname $mparams $mbody) ...
+            $m:method ...
         }
     } => {
         function $typename $cparams { install_super $typename $cbody }
 
         $typename.prototype = Object.create($parent.prototype);
-        $($typename.prototype.$mname = function $mname $mparams 
-          { install_super $typename $mbody };) ...
+        $(methods extended_method $typename $m$base $m$name $m$params $m$body) ...
     }
 
+    // Workaround for BUG #174
     rule {
         $typename {
             constructor $cparams $cbody
-            $($mname $mparams $mbody) ...
+        }
+    } => {
+        function $typename $cparams $cbody
+    }
+    rule {
+        $typename {
+            constructor $cparams $cbody
+            $m:method ...
         }
     } => {
         function $typename $cparams $cbody
 
-        $($typename.prototype.$mname = function $mname $mparams $mbody;) ...
+        $(methods $typename $m$base $m$name $m$params $m$body) ...
     }
 
     rule {

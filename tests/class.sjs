@@ -111,4 +111,12 @@ describe('class', function() {
         expect(expect(b.getMethod().call(b)).to.be(10));
         expect(expect(b.getMethod2().call(b)).to.be(10));
     });
+    it('should create "static" constructor functions', function() {
+        class FooWithStatic {
+            static count() {
+                return 1;
+            }
+        }
+        expect(FooWithStatic.count()).to.be(1);
+    });
 });
