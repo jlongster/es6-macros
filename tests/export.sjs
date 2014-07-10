@@ -47,4 +47,18 @@ describe('export', function() {
     expect(module.exports['default']()).to.eql('MAGIC');
   });
 
+  it('should export classes (short form)', function() {
+    var module = {exports: {}};
+    export class ThingDoer { doSomething() { return 'MAGIC'; } }
+    expect(new ThingDoer().doSomething()).to.eql('MAGIC');
+    expect(new module.exports.ThingDoer().doSomething()).to.eql('MAGIC');
+  });
+
+  it('should export classes as default (short form)', function() {
+    var module = {exports: {}};
+    export default class ThingDoer { doSomething() { return 'MAGIC'; } }
+    expect(new ThingDoer().doSomething()).to.eql('MAGIC');
+    expect(new module.exports['default']().doSomething()).to.eql('MAGIC');
+  });
+
 });

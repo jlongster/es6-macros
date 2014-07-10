@@ -72,6 +72,28 @@ let export = macro {
     }
   }
 
+  case {
+    $export_name class $name:ident $body
+  } => {
+    var module = makeIdent("module", #{$export_name});
+    letstx $module = [module];
+    return #{
+      class $name $body
+      $module.exports.$name = $name;
+    }
+  }
+
+  case {
+    $export_name default class $name:ident $body
+  } => {
+    var module = makeIdent("module", #{$export_name});
+    letstx $module = [module];
+    return #{
+      class $name $body
+      $module.exports['default'] = $name;
+    }
+  }
+
   case { _ $macro_name; } => { return #{export $macro_name;} }
 }
 
