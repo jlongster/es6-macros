@@ -11,13 +11,13 @@ Currently implemented:
 * destructuring (including elision and rest)
 * classes
 * fat arrow functions
+* (limited) [module](http://jsmodules.io) support (plain `export thing;` is not supported, `export { thing };` and `export default thing;` work fine) -- compiles to CommonJS (`require` and `module.exports`)
 
 TODO:
 
 * rest and default arguments
 * spread operator for applying arguments
 * possibly limited `for of` support
-* possibly limited module support
 
 ## Using
 
