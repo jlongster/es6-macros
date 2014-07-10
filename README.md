@@ -11,7 +11,7 @@ Currently implemented:
 * destructuring (including elision and rest)
 * classes
 * fat arrow functions
-* (limited) [module](http://jsmodules.io) support (plain `export thing;` is not supported, `export { thing };` and `export default thing;` work fine) -- compiles to CommonJS (`require` and `module.exports`)
+* (limited) [module](http://jsmodules.io) support
 
 TODO:
 
@@ -33,6 +33,23 @@ $ sjs -m es6-macros file.js
 
 If you pass `-c` to sjs along with `-o output.js`, it will generate a
 sourcemap so you get good debugging too!
+
+## Examples
+
+```js
+import { writeFile } from 'fs'; // var fs = require('fs'); writeFile = fs.writeFile
+import * as moment from 'moment'; // var moment = require('moment')
+
+function writeTime(filename) {
+  writeFile(filename, moment().format('hh:mm:ss'), () => console.log('Done'))
+}
+
+// export writeTime; // single exports don't work because Sweet.js itself uses `export`
+export default writeTime;
+export { writeTime };
+
+export var something = 'hello world'; // short form works with vars, functions and classes
+```
 
 ## Contributing
 
