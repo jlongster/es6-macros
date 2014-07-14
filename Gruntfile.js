@@ -6,6 +6,8 @@ module.exports = function(grunt) {
                 src: ['macros/util.sjs',
                       'macros/class.sjs',
                       'macros/fat-arrow.sjs',
+                      'macros/import.sjs',
+                      'macros/export.sjs',
                       // destructure must come last, so that `var` in
                       // any case macros is not overriden (those have
                       // special syntax)

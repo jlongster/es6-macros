@@ -269,6 +269,157 @@ macro => {
 
 export =>
 
+macroclass alias_pair {
+  pattern {
+    rule { $from:ident as $to:ident }
+  }
+  pattern { 
+    rule { $from:ident }
+    with $to = #{ $from };
+  }
+}
+
+macro import {
+  case {
+    $import_name * as $what:ident from $where:expr
+  } => {
+    letstx $require = [makeIdent("require", #{$import_name})];
+    return #{var $what = $require($where)}
+  }
+
+  case {
+    $import_name $what:ident from $where:expr
+  } => {
+    letstx $require = [makeIdent("require", #{$import_name})];
+    return #{var $what = $require($where)['default']}
+  }
+
+  case {
+    $import_name { $($what:alias_pair) (,) ... } from $where:expr
+  } => {
+    letstx $require = [makeIdent("require", #{$import_name})];
+    return #{
+      var __dep = $require($where);
+      $(var $what$to = __dep.$what$from) (;) ...
+    }
+  }
+
+  case {
+    $import_name $default:ident, { $($what:alias_pair) (,) ... } from $where:expr
+  } => {
+    letstx $require = [makeIdent("require", #{$import_name})];
+    return #{
+      var __dep = $require($where);
+      var $default = __dep['default'];
+      $(var $what$to = __dep.$what$from) (;) ...
+    }
+  }
+
+  case {
+    $import_name $what:expr
+  } => {
+    letstx $require = [makeIdent("require", #{$import_name})];
+    return #{
+      $require($what);
+    }
+  }
+}
+
+export import;
+
+let export = macro {
+  // https://github.com/mozilla/sweet.js/issues/288
+  case { $export export ; } => { return #{export $export;} }
+
+  // Unfortunately, sweet.js's use of `export` makes the simple single-ident form impossible (?) to implement
+  //
+  // case {
+  //   $export_name $what:ident
+  // } => {
+  //   var module = makeIdent("module", #{$export_name});
+  //   letstx $module = [module];
+  //   return #{$module.exports.$what = $what}
+  // }
+
+  case {
+    $export_name { $($what:ident) (,) ... }
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{$($module.exports.$what = $what) (;) ...}
+  }
+
+  case {
+    $export_name default $what:ident
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{$module.exports['default'] = $what}
+  }
+
+  case {
+    $export_name var $name:ident = $def:expr
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      var $name = $def;
+      $module.exports.$name = $name
+    }
+  }
+
+  case {
+    $export_name default var $name:ident = $def:expr
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      var $name = $def;
+      $module.exports['default'] = $name
+    }
+  }
+
+  case {
+    $export_name function $name:ident $params $body
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      function $name $params $body
+      $module.exports.$name = $name;
+    }
+  }
+
+  case {
+    $export_name default function $name:ident $params $body
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      function $name $params $body
+      $module.exports['default'] = $name;
+    }
+  }
+
+  case {
+    $export_name class $name:ident $body
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      class $name $body
+      $module.exports.$name = $name;
+    }
+  }
+
+  case {
+    $export_name default class $name:ident $body
+  } => {
+    letstx $module = [makeIdent("module", #{$export_name})];
+    return #{
+      class $name $body
+      $module.exports['default'] = $name;
+    }
+  }
+
+  case { _ $macro_name; } => { return #{export $macro_name;} }
+}
+
+export export;
+
 macro destructor {
   rule { [ $arr:arr_destructor (,) ... ] } => { (arr $arr ...) }
   rule { { $obj:obj_destructor (,) ... } } => { (obj $obj ...) }
@@ -338,7 +489,7 @@ export var;
 
 let const = macro {
   rule { $id:ident } => {
-    var $id
+    const $id
   }
 
   rule { $pattern:destructor = $rhs:expr ;... } => {
@@ -350,7 +501,7 @@ export const;
 
 let let = macro {
   rule { $id:ident } => {
-    var $id
+    let $id
   }
 
   rule { $pattern:destructor = $rhs:expr ;... } => {
