@@ -12,24 +12,21 @@ macro import {
   case {
     $import_name * as $what:ident from $where:expr
   } => {
-    var require = makeIdent("require", #{$import_name});
-    letstx $require = [require];
+    letstx $require = [makeIdent("require", #{$import_name})];
     return #{var $what = $require($where)}
   }
 
   case {
     $import_name $what:ident from $where:expr
   } => {
-    var require = makeIdent("require", #{$import_name});
-    letstx $require = [require];
+    letstx $require = [makeIdent("require", #{$import_name})];
     return #{var $what = $require($where)['default']}
   }
 
   case {
     $import_name { $($what:alias_pair) (,) ... } from $where:expr
   } => {
-    var require = makeIdent("require", #{$import_name});
-    letstx $require = [require];
+    letstx $require = [makeIdent("require", #{$import_name})];
     return #{
       var __dep = $require($where);
       $(var $what$to = __dep.$what$from) (;) ...
@@ -39,8 +36,7 @@ macro import {
   case {
     $import_name $default:ident, { $($what:alias_pair) (,) ... } from $where:expr
   } => {
-    var require = makeIdent("require", #{$import_name});
-    letstx $require = [require];
+    letstx $require = [makeIdent("require", #{$import_name})];
     return #{
       var __dep = $require($where);
       var $default = __dep['default'];
@@ -51,8 +47,7 @@ macro import {
   case {
     $import_name $what:expr
   } => {
-    var require = makeIdent("require", #{$import_name});
-    letstx $require = [require];
+    letstx $require = [makeIdent("require", #{$import_name})];
     return #{
       $require($what);
     }

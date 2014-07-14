@@ -15,24 +15,21 @@ let export = macro {
   case {
     $export_name { $($what:ident) (,) ... }
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{$($module.exports.$what = $what) (;) ...}
   }
 
   case {
     $export_name default $what:ident
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{$module.exports['default'] = $what}
   }
 
   case {
     $export_name var $name:ident = $def:expr
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       var $name = $def;
       $module.exports.$name = $name
@@ -42,8 +39,7 @@ let export = macro {
   case {
     $export_name default var $name:ident = $def:expr
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       var $name = $def;
       $module.exports['default'] = $name
@@ -53,8 +49,7 @@ let export = macro {
   case {
     $export_name function $name:ident $params $body
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       function $name $params $body
       $module.exports.$name = $name;
@@ -64,8 +59,7 @@ let export = macro {
   case {
     $export_name default function $name:ident $params $body
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       function $name $params $body
       $module.exports['default'] = $name;
@@ -75,8 +69,7 @@ let export = macro {
   case {
     $export_name class $name:ident $body
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       class $name $body
       $module.exports.$name = $name;
@@ -86,8 +79,7 @@ let export = macro {
   case {
     $export_name default class $name:ident $body
   } => {
-    var module = makeIdent("module", #{$export_name});
-    letstx $module = [module];
+    letstx $module = [makeIdent("module", #{$export_name})];
     return #{
       class $name $body
       $module.exports['default'] = $name;
