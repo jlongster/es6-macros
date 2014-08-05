@@ -9,6 +9,7 @@ module.exports = function(grunt) {
                       // destructure must come last, so that `var` in
                       // any case macros is not overriden (those have
                       // special syntax)
+                      'macros/default-rest-parameter.sjs',
                       'macros/destructure.sjs'],
                 dest: 'index.js'
             }
