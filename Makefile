@@ -1,5 +1,5 @@
 
-test: 
+test:
 	grunt
 	grunt sweetjs
-	mocha --harmony -b -R tap tests
+	./node_modules/.bin/mocha --harmony -b -R tap tests

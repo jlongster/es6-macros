@@ -21,11 +21,12 @@
     "url": "https://github.com/jlongster/es6-macros/issues"
   },
   "devDependencies": {
+    "expect.js": "~0.3.1",
     "grunt": "~0.4.2",
     "grunt-contrib-concat": "~0.3.0",
-    "sweet.js": "~0.7.0",
     "grunt-sweet.js": "~0.1.4",
-    "expect.js": "~0.3.1"
+    "mocha": "^1.21.3",
+    "sweet.js": "~0.7.0"
   },
   "tags": [
     "sweet-macros"
