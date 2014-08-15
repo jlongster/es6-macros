@@ -10,6 +10,9 @@ describe('declaration only', function() {
         var f = function() { let x; }
         expect(new RegExp('.*(var).*').test(f.toString())).to.be(true);
     });
+    it('should keep for-in loop as is', function() {
+        for (var i in [1, 2, 3]) {}
+    });
 });
 
 macro testWithDecl {

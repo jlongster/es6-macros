@@ -372,6 +372,9 @@ macro destruct {
 }
 
 let var = macro {
+  rule { $pattern:ident in } => {
+    var $pattern in
+  }
   rule { $pattern:ident = $rhs:expr ;... } => {
     var $pattern = $rhs;
   }
