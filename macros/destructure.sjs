@@ -54,25 +54,40 @@ macro destruct {
 }
 
 let var = macro {
+  rule { $pattern:ident = $rhs:expr ;... } => {
+    var $pattern = $rhs;
+  }
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
     destruct $pattern var __ref
+  }
+  rule { $pattern:ident ;... } => {
+    var $pattern;
   }
 }
 export var;
 
 let const = macro {
+  rule { $pattern:ident = $rhs:expr ;... } => {
+    var $pattern = $rhs;
+  }
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
-    destruct $pattern const __ref
+    destruct $pattern var __ref
   }
 }
 export const;
 
 let let = macro {
+  rule { $pattern:ident = $rhs:expr ;... } => {
+    var $pattern = $rhs;
+  }
   rule { $pattern:destructor = $rhs:expr ;... } => {
     var __ref = $rhs;
-    destruct $pattern let __ref
+    destruct $pattern var __ref
+  }
+  rule { $pattern:ident ;... } => {
+    var $pattern;
   }
 }
 export let;
