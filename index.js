@@ -199,6 +199,7 @@ let class = macro {
         function $typename $cparams { install_super $typename $cbody }
 
         $typename.prototype = Object.create($parent.prototype);
+        $typename.prototype.constructor = $typename;
         $(methods extended_method $typename $m$base $m$name $m$params $m$body) ...
     }
 
