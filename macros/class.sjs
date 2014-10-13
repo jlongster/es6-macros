@@ -30,7 +30,7 @@ macro install_super {
                 else if(s.token.value == 'function') {
                     // function keyword
                     res.push(stx[i++]);
-                    
+
                     // optional function ident
                     if(stx[i].token.type == parser.Token.Identifier) {
                         res.push(stx[i++]);
@@ -49,7 +49,7 @@ macro install_super {
                     if(inFunction) {
                         saveThis = true;
                     }
-                    
+
                     if(n.token.type == parser.Token.Delimiter) {
                         if(n.token.value == '[]') {
                             var refstx = withSyntax($ref = [n]) {
@@ -85,7 +85,7 @@ macro install_super {
                         if(args &&
                            args.token.type == parser.Token.Delimiter &&
                            args.token.value == '()') {
-                            
+
                             // prepend `this` to the arguments
                             var pre = [makeIdent(inFunction? 'self' : 'this', stx[0])];
                             if(args.token.inner.length) {
@@ -134,7 +134,8 @@ let class = macro {
         function $typename $cparams { install_super $typename $cbody }
 
         $typename.prototype = Object.create($parent.prototype);
-        $($typename.prototype.$mname = function $mname $mparams 
+        $typename.prototype.constructor = $typename;
+        $($typename.prototype.$mname = function $mname $mparams
           { install_super $typename $mbody };) ...
     }
 
